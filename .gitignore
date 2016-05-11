@@ -1,0 +1,6 @@
+*.log
+assets/*
+protected/runtime/*
+/backup/JavaRobot/nbproject/private/
+/backup/JavaRobot/build/
+/backup/JavaRobot/dist/

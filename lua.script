@@ -1,0 +1,28 @@
+body = json.parse(request.body)
+local yourAppliaction = http.request {
+    url = '/lineBot/hook',
+    method = 'POST',
+    data = json.stringify(body.events),
+    headers = {
+        ['Content-Type'] = 'application/json; charser=UTF-8'
+    }
+}
+log(yourAppliaction.content)
+response = json.parse(yourAppliaction.content)
+
+data = {
+    ['replyToken'] = response.replyToken,
+    ['messages']   = response.messages
+}
+
+local reply_result = http.request {
+    url = 'https://api.line.me/v2/bot/message/reply',
+    method = 'POST',
+    data = json.stringify(data),
+    headers = {
+        ['Content-Type'] = 'application/json',
+        ['Authorization'] = 'Bearer +EcHH6lvAf/A5uW512v+RANnVU/+tRQaMJkS4KkxtuAnmUjtwz9aiIx2V/5rYeH3k7vjxh4t549kvUUvZfSQc1KVDobOM7izPQgzMWqym+7NXH9xvcym0DlriDnGWZQ5Fy5XFA1m/I1WajRZHx9xyQdB04t89/1O/w1cDnyilFU='
+    }
+}
+log(reply_result)
+return true
