@@ -36,6 +36,7 @@ class RoomManager{
         'RESET_SUCCESS'         => "遊戲房間已重新開始",
         'RESET_FAILED'          => "遊戲未結束無法重新開始",
         'PEEP_SUCCESS'          => "%s身分為%s ",
+        'CHECKED_PERSON'        => "對象為 - %s",
     ];
 
     protected $ROOM_STATUS = [
@@ -384,20 +385,20 @@ class RoomManager{
     
                     // Change status for this room.
                     $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
-                }
-                $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
                 
-                if(!empty($peepMessage)){
-                    foreach ($peepMessage as $peep_u=>$peep_m){
-                        $message['text'] = $peep_m;
-                        $this->parent->actionPushMessages($peep_u, [$message]);
+                    if(!empty($peepMessage)){
+                        foreach ($peepMessage as $peep_u=>$peep_m){
+                            $message['text'] = $peep_m;
+                            $this->parent->actionPushMessages($peep_u, [$message]);
+                        }
                     }
                 }
-    
+                $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
+
                 // set return message
-                $message['text'] = sprintf($this->MESSAGES['KILL_CHECKED'], $target['displayName']);
+                $message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
                 $response['messages'][] = $message;
-    
+
                 // transaction commit
                 $transaction->commit();
             }catch (Exception $e){
