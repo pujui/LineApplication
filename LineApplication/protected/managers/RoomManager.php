@@ -435,7 +435,7 @@ class RoomManager{
         $message = [ 'type' => 'text', 'text' => '' ];
         if($person == 'ROOM'){
             $roomInfo = $this->lineBotDAO->findRoom($roomId);
-        }else if($person == 'USER'){{
+        }else if($person == 'USER'){
             $roomInfo = $this->lineBotDAO->findRoomUserIsLive($roomId);
         }
         if(empty($roomInfo)){
