@@ -505,7 +505,7 @@ class RoomManager{
         if(empty($roomInfo)){
             $message['text'] = $this->MESSAGES['START_NOT_EXIST'];
             $response['messages'][] = $message;
-        }else if($roomInfo['status'] != $this->ROOM_STATUS['END']){
+        }else if($roomInfo['status'] == $this->ROOM_STATUS['END']){
             $this->lineBotDAO->setRoom($roomId, $this->ROOM_STATUS['OPEN']);
             $message['text'] = $this->MESSAGES['RESET_SUCCESS'];
             $response['messages'][] = $message;
