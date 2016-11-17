@@ -169,6 +169,8 @@ class LineBotController extends FrameController{
             $roomManager->next($userId, $command, $response);
         }else if($command[0] == '/help'){
             $roomManager->action($userId, $command, $response, 'HELPER');
+        }else if($command[0] == '/peep'){
+            $roomManager->action($userId, $command, $response, 'PEEPER');
         }else if($command[0] == '/status'){
             $roomManager->status($userId, $message, $response, 'USER');
         }

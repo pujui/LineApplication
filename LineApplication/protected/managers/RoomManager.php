@@ -35,6 +35,7 @@ class RoomManager{
         'YOU_ARE_DEAD'          => "你已經死了",
         'RESET_SUCCESS'         => "遊戲房間已重新開始",
         'RESET_FAILED'          => "遊戲未結束無法重新開始",
+        'PEEP_SUCCESS'          => "%s身分為%s ",
     ];
 
     protected $ROOM_STATUS = [
@@ -59,7 +60,8 @@ class RoomManager{
         'KILLER'    => 'KILLER',
         'HELPER'    => 'HELPER',
         'POLICE'    => 'POLICE',
-        'VILLAGER'  => 'VILLAGER'
+        'VILLAGER'  => 'VILLAGER',
+        'PEEPER'    => 'PEEPER'
     ];
     public $parent = null;
 
@@ -69,13 +71,15 @@ class RoomManager{
         ['role' => 'KILLER', 'roleName' => '殺手'],
         ['role' => 'HELPER', 'roleName' => '救援'],
         ['role' => 'POLICE', 'roleName' => '警察'],
-        ['role' => 'VILLAGER', 'roleName' => '村民']
+        ['role' => 'VILLAGER', 'roleName' => '村民'],
+        ['role' => 'PEEPER', 'roleName' => '偷窺者']
     ];
     private $roleName = [
         'KILLER'    => "[殺手]\n可以殺死任何對象\n/kill [player number] \nexample: /kill 1",
         'HELPER'    => "[救援]\n可以再每回合隨意救活被殺手殺死對象(當然也可以救活自己)\n/help [player number] \nexample: /help 1",
         'POLICE'    => "[警察]\n無",
-        'VILLAGER'  => "[村民]\n無"
+        'VILLAGER'  => "[村民]\n無",
+        'PEEPER'    => '[偷窺者]\n可偷看一人職業'
     ];
     private $roleStatus = [
         'NORMAL'  => 'Live',
@@ -294,6 +298,9 @@ class RoomManager{
         }else if($action == $this->ROLES['HELPER'] && $userLiveRoom['role'] != $this->ROLES['HELPER']){
             $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $userLiveRoom['role']);
             $response['messages'][] = $message;
+        }else if($action == $this->ROLES['PEEPER'] && $userLiveRoom['role'] != $this->ROLES['PEEPER']){
+            $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $userLiveRoom['role']);
+            $response['messages'][] = $message;
         }else if($userLiveRoom['roomStatus'] == $this->ROOM_STATUS['START']){
             if($userLiveRoom['status'] == $this->ROLE_STATUS['DEAD']){
                 $message['text'] = $this->MESSAGES['YOU_ARE_DEAD'];
@@ -327,7 +334,7 @@ class RoomManager{
                     if($row['event'] == self::ROOM_EVENT_STOP){
                         $actionCount++;
                     }
-                    if(in_array($row['role'], [$this->ROLES['KILLER'], $this->ROLES['HELPER']])){
+                    if(in_array($row['role'], [$this->ROLES['KILLER'], $this->ROLES['HELPER'], $this->ROLES['PEEPER']])){
                         $mustActionCount++;
                     }
                 }
@@ -348,7 +355,7 @@ class RoomManager{
                 if($mustActionCount <= $actionCount){
                     $message['text'] = $this->MESSAGES['MONING_COMING'];
                     $pushMessages[] = $message;
-                    $mergeMessage = $killMessage = $helpMessage = [];
+                    $mergeMessage = $killMessage = $helpMessage = $peepMessage = [];
                     foreach ($setList as $row){
                         if($row['role'] == $this->ROLES['KILLER']){
                             if($setList[$row['toUserId']]['power'] != $this->ROLES['HELPER']){
@@ -367,6 +374,8 @@ class RoomManager{
                             $setList[$row['toUserId']]['power'] = $this->ROLES['HELPER'];
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['NORMAL']);
                             $helpMessage[] = sprintf($this->MESSAGES['HELP_SUCCESS'], $setList[$row['toUserId']]['displayName']);
+                        }else if($row['role'] == $this->ROLES['PEEPER']){
+                            $peepMessage[$row['userId']] = sprintf($this->MESSAGES['PEEP_SUCCESS'], $setList[$row['toUserId']]['displayName'], $this->roleName[$setList[$row['toUserId']]['role']]);
                         }
                     }
                     $mergeMessage = array_merge($killMessage, $helpMessage);
@@ -377,6 +386,13 @@ class RoomManager{
                     $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
                 }
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
+                
+                if(!empty($peepMessage)){
+                    foreach ($peepMessage as $peep_u=>$peep_m){
+                        $message['text'] = $peep_m;
+                        $this->parent->actionPushMessages($peep_u, [$message]);
+                    }
+                }
     
                 // set return message
                 $message['text'] = sprintf($this->MESSAGES['KILL_CHECKED'], $target['displayName']);
