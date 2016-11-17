@@ -386,18 +386,19 @@ class RoomManager{
                     // Change status for this room.
                     $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
                 
-                    if(!empty($peepMessage)){
-                        foreach ($peepMessage as $peep_u=>$peep_m){
-                            $message['text'] = $peep_m;
-                            $this->parent->actionPushMessages($peep_u, [$message]);
-                        }
-                    }
                 }
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
 
                 // set return message
                 $message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
                 $response['messages'][] = $message;
+
+                if(!empty($peepMessage)){
+                    foreach ($peepMessage as $peep_u=>$peep_m){
+                        $message['text'] = $peep_m;
+                        $this->parent->actionPushMessages($peep_u, [$message]);
+                    }
+                }
 
                 // transaction commit
                 $transaction->commit();
