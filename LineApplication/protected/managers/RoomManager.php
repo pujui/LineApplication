@@ -33,6 +33,8 @@ class RoomManager{
         'MONING_COMING'         => "當清晨來臨了...",
         'DO_NOT_NEXT'           => "黑夜時間還沒到",
         'YOU_ARE_DEAD'          => "你已經死了",
+        'RESET_SUCCESS'         => "遊戲房間已重新開始",
+        'RESET_FAILED'          => "遊戲未結束無法重新開始",
     ];
 
     protected $ROOM_STATUS = [
@@ -56,7 +58,7 @@ class RoomManager{
         'JOIN'      => 'JOIN',
         'KILLER'    => 'KILLER',
         'HELPER'    => 'HELPER',
-        //'POLICE'    => 'POLICE',
+        'POLICE'    => 'POLICE',
         'VILLAGER'  => 'VILLAGER'
     ];
     public $parent = null;
@@ -72,8 +74,8 @@ class RoomManager{
     private $roleName = [
         'KILLER'    => "[殺手]\n可以殺死任何對象\n/kill [player number] \nexample: /kill 1",
         'HELPER'    => "[救援]\n可以再每回合隨意救活被殺手殺死對象(當然也可以救活自己)\n/help [player number] \nexample: /help 1",
-        'POLICE'    => "[警察]\n當有人死亡後會被公布出來, 被公布後可以被殺手殺死之前不行",
-        'VILLAGER'  => "[村民]\n只可以投票誰是兇手的羔羊"
+        'POLICE'    => "[警察]\n無",
+        'VILLAGER'  => "[村民]\n無"
     ];
     private $roleStatus = [
         'NORMAL'  => 'Live',
@@ -274,13 +276,13 @@ class RoomManager{
     }
 
     /**
-     * Kill by user
+     * action by user
      * @param unknown $userId
      * @param unknown $command
      * @param unknown $response
      * @return string
      */
-    public function kill($userId, $command, &$response, $action){
+    public function action($userId, $command, &$response, $action){
         $message = [ 'type' => 'text', 'text' => '' ];
         $userLiveRoom = $this->lineBotDAO->findRoomUserIsLive($userId);
         if(empty($userLiveRoom)){
@@ -331,49 +333,61 @@ class RoomManager{
                 }
                 unset($row);
             }
-            $this->lineBotDAO->updateRoomList($self['roomId'], $self['userId'], '', '', self::ROOM_EVENT_STOP, $target['userId']);
-            $setList[$self['userId']]['toUserId'] = $target['userId'];
 
-            // Push message for room
-            $pushMessages = [];
-            $message['text'] = sprintf($this->MESSAGES['NIGHT_PERSON_ACTION'], $actionCount);
-            $pushMessages[] = $message;
-            if($mustActionCount <= $actionCount){
-                $message['text'] = $this->MESSAGES['MONING_COMING'];
+            try {
+                // transaction start
+                $transaction = $this->db->beginTransaction();
+
+                $this->lineBotDAO->updateRoomList($self['roomId'], $self['userId'], '', '', self::ROOM_EVENT_STOP, $target['userId']);
+                $setList[$self['userId']]['toUserId'] = $target['userId'];
+    
+                // Push message for room
+                $pushMessages = [];
+                $message['text'] = sprintf($this->MESSAGES['NIGHT_PERSON_ACTION'], $actionCount);
                 $pushMessages[] = $message;
-                $mergeMessage = $killMessage = $helpMessage = [];
-                foreach ($setList as $row){
-                    if($row['role'] == $this->ROLES['KILLER']){
-                        if($setList[$row['toUserId']]['power'] != $this->ROLES['HELPER']){
-                            $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['DEAD']);
+                if($mustActionCount <= $actionCount){
+                    $message['text'] = $this->MESSAGES['MONING_COMING'];
+                    $pushMessages[] = $message;
+                    $mergeMessage = $killMessage = $helpMessage = [];
+                    foreach ($setList as $row){
+                        if($row['role'] == $this->ROLES['KILLER']){
+                            if($setList[$row['toUserId']]['power'] != $this->ROLES['HELPER']){
+                                $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['DEAD']);
+                            }
+                            if($setList[$row['toUserId']]['killCount'] == 0){
+                                $killMessage[] = sprintf($this->MESSAGES['KILL_SUCCESS'], $setList[$row['toUserId']]['displayName']);
+                            }else if($setList[$row['toUserId']]['killCount'] > 2){
+                                $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', $this->ROLE_STATUS['DEAD']);
+                                $killMessage[] = sprintf($this->MESSAGES['KILL_AGAIN_FAILED'], $setList[$row['toUserId']]['displayName']);
+                            }else{
+                                $killMessage[] = sprintf($this->MESSAGES['KILL_AGAIN_SUCCESS'], $setList[$row['toUserId']]['displayName']);
+                            }
+                            $setList[$row['toUserId']]['killCount']++;
+                        }else if($row['role'] == $this->ROLES['HELPER']){
+                            $setList[$row['toUserId']]['power'] = $this->ROLES['HELPER'];
+                            $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['NORMAL']);
+                            $helpMessage[] = sprintf($this->MESSAGES['HELP_SUCCESS'], $setList[$row['toUserId']]['displayName']);
                         }
-                        if($setList[$row['toUserId']]['killCount'] == 0){
-                            $killMessage[] = sprintf($this->MESSAGES['KILL_SUCCESS'], $setList[$row['toUserId']]['displayName']);
-                        }else if($setList[$row['toUserId']]['killCount'] > 2){
-                            $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', $this->ROLE_STATUS['DEAD']);
-                            $killMessage[] = sprintf($this->MESSAGES['KILL_AGAIN_FAILED'], $setList[$row['toUserId']]['displayName']);
-                        }else{
-                            $killMessage[] = sprintf($this->MESSAGES['KILL_AGAIN_SUCCESS'], $setList[$row['toUserId']]['displayName']);
-                        }
-                        $setList[$row['toUserId']]['killCount']++;
-                    }else if($row['role'] == $this->ROLES['HELPER']){
-                        $setList[$row['toUserId']]['power'] = $this->ROLES['HELPER'];
-                        $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['NORMAL']);
-                        $helpMessage[] = sprintf($this->MESSAGES['HELP_SUCCESS'], $setList[$row['toUserId']]['displayName']);
                     }
+                    $mergeMessage = array_merge($killMessage, $helpMessage);
+                    $message['text'] = implode(PHP_EOL, $mergeMessage);
+                    $pushMessages[] = $message;
+    
+                    // Change status for this room.
+                    $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
                 }
-                $mergeMessage = array_merge($killMessage, $helpMessage);
-                $message['text'] = implode(PHP_EOL, $mergeMessage);
-                $pushMessages[] = $message;
-
-                // Change status for this room.
-                $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
+                $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
+    
+                // set return message
+                $message['text'] = sprintf($this->MESSAGES['KILL_CHECKED'], $target['displayName']);
+                $response['messages'][] = $message;
+    
+                // transaction commit
+                $transaction->commit();
+            }catch (Exception $e){
+                // transaction rollback
+                $transaction->rollback();
             }
-            $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
-
-            // set return message
-            $message['text'] = sprintf($this->MESSAGES['KILL_CHECKED'], $target['displayName']);
-            $response['messages'][] = $message;
         }else{
             $message['text'] = $this->MESSAGES['DO_NOT_NEXT'];
             $response['messages'][] = $message;
@@ -412,20 +426,46 @@ class RoomManager{
     }
 
     /**
-     * next by room
+     * next by room and user
      * @param unknown $roomId
      * @param unknown $message
      * @param unknown $response
      */
-    public function status($roomId, $message, &$response){
+    public function status($roomId, $message, &$response, $person = 'ROOM'){
+        $message = [ 'type' => 'text', 'text' => '' ];
+        if($person == 'ROOM'){
+            $roomInfo = $this->lineBotDAO->findRoom($roomId);
+        }else if($person == 'USER'){{
+            $roomInfo = $this->lineBotDAO->findRoomUserIsLive($roomId);
+        }
+        if(empty($roomInfo)){
+            $message['text'] = $this->MESSAGES['START_NOT_EXIST'];
+            $response['messages'][] = $message;
+        }else{
+            $this->setRoomStatus($roomInfo['roomId'], $this->ROOM_STATUS['OPEN'],  $response);
+            $this->setRoomRoleStatus($roomInfo['roomId'], $response);
+        }
+    }
+
+    /**
+     * reset by room
+     * @param unknown $roomId
+     * @param unknown $message
+     * @param unknown $response
+     */
+    public function reset($roomId, $message, &$response){
         $message = [ 'type' => 'text', 'text' => '' ];
         $roomInfo = $this->lineBotDAO->findRoom($roomId);
         if(empty($roomInfo)){
             $message['text'] = $this->MESSAGES['START_NOT_EXIST'];
             $response['messages'][] = $message;
+        }else if($roomInfo['status'] == $this->ROOM_STATUS['END']){
+            $this->lineBotDAO->setRoom($roomId, $this->ROOM_STATUS['OPEN']);
+            $message['text'] = $this->MESSAGES['RESET_SUCCESS'];
+            $response['messages'][] = $message;
         }else{
-            $this->setRoomStatus($roomId, $this->ROOM_STATUS['OPEN'],  $response);
-            $this->setRoomRoleStatus($roomId, $response);
+            $message['text'] = $this->MESSAGES['RESET_FAILED'];
+            $response['messages'][] = $message;
         }
     }
 

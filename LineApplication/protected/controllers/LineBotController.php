@@ -156,17 +156,21 @@ class LineBotController extends FrameController{
                 $roomManager->role($userId, $message, $response);
             }else if($command[0] == '/status'){
                 $roomManager->status($userId, $message, $response);
+            }else if($command[0] == '/reset'){
+                $roomManager->reset($userId, $message, $response);
             }
         }else if($command[0] == '/join'){
             $roomManager->join($userId, $command, $response);
         }else if($command[0] == '/leave'){
             $roomManager->leave($userId, $command, $response);
         }else if($command[0] == '/kill'){
-            $roomManager->kill($userId, $command, $response, 'KILLER');
+            $roomManager->action($userId, $command, $response, 'KILLER');
         }else if($command[0] == '/next'){
             $roomManager->next($userId, $command, $response);
         }else if($command[0] == '/help'){
-            $roomManager->kill($userId, $command, $response, 'HELPER');
+            $roomManager->action($userId, $command, $response, 'HELPER');
+        }else if($command[0] == '/status'){
+            $roomManager->status($userId, $message, $response);
         }
         $this->exitHook($response);
     }
