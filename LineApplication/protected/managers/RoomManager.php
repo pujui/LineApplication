@@ -79,7 +79,7 @@ class RoomManager{
         'HELPER'    => "[救援]\n可以再每回合隨意救活被殺手殺死對象(當然也可以救活自己)\n/help [player number] \nexample: /help 1",
         'POLICE'    => "[警察]\n無",
         'VILLAGER'  => "[村民]\n無",
-        'PEEPER'    => '[偷窺者]\n可偷看一人職業'
+        'PEEPER'    => "[偷窺者]\n可偷看一人職業"
     ];
     private $roleStatus = [
         'NORMAL'  => 'Live',
@@ -343,7 +343,7 @@ class RoomManager{
 
             try {
                 // transaction start
-                $transaction = $this->db->beginTransaction();
+                $transaction = $this->lineBotDAO->db->beginTransaction();
 
                 $this->lineBotDAO->updateRoomList($self['roomId'], $self['userId'], '', '', self::ROOM_EVENT_STOP, $target['userId']);
                 $setList[$self['userId']]['toUserId'] = $target['userId'];
