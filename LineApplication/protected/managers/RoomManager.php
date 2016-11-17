@@ -435,11 +435,12 @@ class RoomManager{
         $message = [ 'type' => 'text', 'text' => '' ];
         if($person == 'ROOM'){
             $roomInfo = $this->lineBotDAO->findRoom($roomId);
+            $message['text'] = $this->MESSAGES['START_NOT_EXIST'];
         }else if($person == 'USER'){
             $roomInfo = $this->lineBotDAO->findRoomUserIsLive($roomId);
+            $message['text'] = $this->MESSAGES['LEAVE_NOT_EXIST'];
         }
         if(empty($roomInfo)){
-            $message['text'] = $this->MESSAGES['START_NOT_EXIST'];
             $response['messages'][] = $message;
         }else{
             $this->setRoomStatus($roomInfo['roomId'], $this->ROOM_STATUS['OPEN'],  $response);
