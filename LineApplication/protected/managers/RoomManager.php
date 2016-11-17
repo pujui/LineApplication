@@ -343,7 +343,7 @@ class RoomManager{
 
             try {
                 // transaction start
-                $transaction = $this->lineBotDAO->db->beginTransaction();
+                $transaction = Yii::app()->db->beginTransaction();
 
                 $this->lineBotDAO->updateRoomList($self['roomId'], $self['userId'], '', '', self::ROOM_EVENT_STOP, $target['userId']);
                 $setList[$self['userId']]['toUserId'] = $target['userId'];
