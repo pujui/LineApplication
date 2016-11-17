@@ -121,6 +121,7 @@ class LineBotDAO extends BaseDAO{
             $bind[':event'] = (string)$event;
         }
         if($toUserId != ''){
+            if($toUserId == 'CLEAR') $toUserId = '';
             $set .= ',toUserId=:toUserId'; 
             $bind[':toUserId'] = (string)$toUserId;
         }

@@ -509,7 +509,7 @@ class RoomManager{
             $this->lineBotDAO->setRoom($roomId, $this->ROOM_STATUS['OPEN']);
             $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
             foreach ($list as $row){
-                $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', $this->ROLE_STATUS['NORMAL']);
+                $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', $this->ROLE_STATUS['NORMAL'], 'CLEAR');
             }
             $message['text'] = $this->MESSAGES['RESET_SUCCESS'];
             $response['messages'][] = $message;
