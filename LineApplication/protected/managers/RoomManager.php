@@ -37,6 +37,8 @@ class RoomManager{
         'RESET_FAILED'          => "遊戲未結束無法重新開始",
         'PEEP_SUCCESS'          => "%s身分為%s ",
         'CHECKED_PERSON'        => "對象為 - %s",
+        'KILLER_VICTORY'        => "殺手贏了",
+        'KILLER_LOST'           => "殺手輸了",
     ];
 
     protected $ROOM_STATUS = [
@@ -348,7 +350,7 @@ class RoomManager{
 
                 $this->lineBotDAO->updateRoomList($self['roomId'], $self['userId'], '', '', self::ROOM_EVENT_STOP, $target['userId']);
                 $setList[$self['userId']]['toUserId'] = $target['userId'];
-    
+
                 // Push message for room
                 $pushMessages = [];
                 $message['text'] = sprintf($this->MESSAGES['NIGHT_PERSON_ACTION'], $actionCount);
@@ -360,6 +362,7 @@ class RoomManager{
                     foreach ($setList as $row){
                         if($row['role'] == $this->ROLES['KILLER']){
                             if($setList[$row['toUserId']]['power'] != $this->ROLES['HELPER']){
+                                $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['DEAD'];
                                 $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['DEAD']);
                             }
                             if($setList[$row['toUserId']]['killCount'] == 0){
@@ -373,6 +376,7 @@ class RoomManager{
                             $setList[$row['toUserId']]['killCount']++;
                         }else if($row['role'] == $this->ROLES['HELPER']){
                             $setList[$row['toUserId']]['power'] = $this->ROLES['HELPER'];
+                            $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['NORMAL'];
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['NORMAL']);
                             $helpMessage[] = sprintf($this->MESSAGES['HELP_SUCCESS'], $setList[$row['toUserId']]['displayName']);
                         }else if($row['role'] == $this->ROLES['PEEPER']){
@@ -382,9 +386,32 @@ class RoomManager{
                     $mergeMessage = array_merge($killMessage, $helpMessage);
                     $message['text'] = implode(PHP_EOL, $mergeMessage);
                     $pushMessages[] = $message;
-    
+
+
+                    $all_killer_del = false;
+                    $all_normal_del = false;
+                    foreach ($setList as $row){
+                        if($row['status'] == $this->ROLE_STATUS['NORMAL']){
+                            if($row['role'] == $this->ROLES['KILLER']){
+                                $all_killer_del = true;
+                            }else{
+                                $all_normal_del = true;
+                            }
+                        }
+                    }
+                    
                     // Change status for this room.
-                    $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
+                    if($all_normal_del === true && $all_killer_del == true){
+                        $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
+                    }else{
+                        $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['END']);
+                        if($all_killer_del == true){
+                            $message['text'] = $this->MESSAGES['KILLER_VICTORY'];
+                        }else{
+                            $message['text'] = $this->MESSAGES['KILLER_LOST'];
+                        }
+                        $pushMessages[] = $message;
+                    }
                 
                 }
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
