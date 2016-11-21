@@ -240,7 +240,7 @@ class RoomManager{
                         $setList[$user['id']]['role'] = $this->role[$r_k]['role'];
                         $setList[$user['id']]['roleName'] = $this->roleName[$this->role[$r_k]['role']];
                     }
-                    $this->lineBotDAO->updateRoomList($roomId, $user['userId'], $setList[$user['id']]['role'], '', self::ROOM_EVENT_START);
+                    $this->lineBotDAO->updateRoomList($roomId, $user['userId'], $setList[$user['id']]['role'], $this->ROLE_STATUS['NORMAL'], self::ROOM_EVENT_STAR, 'CLEAR');
                 }
                 // Set role message on room
                 $message['text'] = $this->MESSAGES['START_ARLEADY'];
@@ -374,19 +374,18 @@ class RoomManager{
                                 $killMessage[] = sprintf($this->MESSAGES['KILL_AGAIN_SUCCESS'], $setList[$row['toUserId']]['displayName']);
                             }
                             $setList[$row['toUserId']]['killCount']++;
-                        }else if($row['role'] == $this->ROLES['HELPER']){
+                        }else if($row['role'] == $this->ROLES['HELPER'] && $row['toUserId'] !=''){
                             $setList[$row['toUserId']]['power'] = $this->ROLES['HELPER'];
                             $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['NORMAL'];
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['NORMAL']);
                             $helpMessage[] = sprintf($this->MESSAGES['HELP_SUCCESS'], $setList[$row['toUserId']]['displayName']);
-                        }else if($row['role'] == $this->ROLES['PEEPER']){
+                        }else if($row['role'] == $this->ROLES['PEEPER'] ){
                             $peepMessage[$row['userId']] = sprintf($this->MESSAGES['PEEP_SUCCESS'], $setList[$row['toUserId']]['displayName'], $this->roleName[$setList[$row['toUserId']]['role']]);
                         }
                     }
                     $mergeMessage = array_merge($killMessage, $helpMessage);
                     $message['text'] = implode(PHP_EOL, $mergeMessage);
                     $pushMessages[] = $message;
-
 
                     $all_killer_del = false;
                     $all_normal_del = false;
