@@ -401,13 +401,13 @@ class RoomManager{
                     if($actionRoomStatus == self::ROOM_EVENT_VOTE){
                         $maxUserId = $maxVote = 0;
                         foreach ($setList as $row){
-                            $voteMessage[] = sprint($this->MESSAGES['VOTE_TOTAL'], $row['displayName'], $row['voteCount']);
+                            $voteMessage[] = sprintf($this->MESSAGES['VOTE_TOTAL'], $row['displayName'], $row['voteCount']);
                             if($row['voteCount'] >= $maxVote){
                                 $maxUserId = $row['userId'];
                                 $maxVote = $row['voteCount'];
                             }
                         }
-                        $voteMessage[] = sprint($this->MESSAGES['VOTE_DEAD'], $setList[$maxUserId]['displayName']);
+                        $voteMessage[] = sprintf($this->MESSAGES['VOTE_DEAD'], $setList[$maxUserId]['displayName']);
                         $this->lineBotDAO->updateRoomList($self['roomId'], $maxUserId, '', $this->ROLE_STATUS['DEAD']);
                     }else{
                         $message['text'] = $this->MESSAGES['MONING_COMING'];
