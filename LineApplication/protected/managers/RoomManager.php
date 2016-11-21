@@ -374,7 +374,7 @@ class RoomManager{
                     foreach ($setList as $row){
                         if($actionRoomStatus == self::ROOM_EVENT_VOTE){
                             $setList[$row['toUserId']]['voteCount']++;
-                            $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], self::ROOM_EVENT_STOP);
+                            $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', '', self::ROOM_EVENT_STOP);
                         }else if($row['role'] == $this->ROLES['KILLER']){
                             if($setList[$row['toUserId']]['power'] != $this->ROLES['HELPER']){
                                 $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['DEAD'];
