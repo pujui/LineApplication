@@ -158,6 +158,8 @@ class LineBotController extends FrameController{
                 $roomManager->status($userId, $message, $response);
             }else if($command[0] == '/reset'){
                 $roomManager->reset($userId, $message, $response);
+            }else if($command[0] == '/next'){
+                $roomManager->next($userId, $command, $response);
             }
         }else if($command[0] == '/join'){
             $roomManager->join($userId, $command, $response);

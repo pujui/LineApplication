@@ -439,16 +439,22 @@ class RoomManager{
     }
 
     /**
-     * next by user
+     * next by room and user
      * @param unknown $userId
      * @param unknown $message
      * @param unknown $response
      */
-    public function next($userId, $message, &$response){
+    public function next($roomId, $message, &$response, $person = 'ROOM'){
         $message = [ 'type' => 'text', 'text' => '' ];
-        $userLiveRoom = $this->lineBotDAO->findRoomUserIsLive($userId);
-        if(empty($userLiveRoom)){
+        if($person == 'ROOM'){
+            $userLiveRoom = $this->lineBotDAO->findRoom($roomId);
+            $userLiveRoom['roomStatus'] = $userLiveRoom['status'];
+            $message['text'] = $this->MESSAGES['START_NOT_EXIST'];
+        }else if($person == 'USER'){
+            $userLiveRoom = $this->lineBotDAO->findRoomUserIsLive($roomId);
             $message['text'] = $this->MESSAGES['LEAVE_NOT_EXIST'];
+        }
+        if(empty($userLiveRoom)){
             $response['messages'][] = $message;
         }else if($userLiveRoom['roomStatus'] == $this->ROOM_STATUS['STOP']){
             $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
