@@ -566,7 +566,7 @@ class RoomManager{
         $message = [ 'type' => 'text', 'text' => '目前房間人員狀態'.PHP_EOL.'=================='.PHP_EOL ];
         $list = $this->lineBotDAO->findRoomList($roomId);
         foreach ($list as $key=>$user){
-            $message['text'] .= sprintf("Player %d. 狀態: %s 名稱:%s ".PHP_EOL, 
+            $message['text'] .= sprintf("Player %d. 狀態: %s - %s ".PHP_EOL, 
                                     $key+1
                                     , $this->roleStatus[$user['status']]
                                     , $user['displayName']
