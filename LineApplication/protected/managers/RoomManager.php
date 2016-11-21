@@ -78,18 +78,18 @@ class RoomManager{
         ['role' => 'PEEPER', 'roleName' => '偷窺者']
     ];
     private $roleName = [
-        'KILLER'    => "[殺手]\n可以殺死任何對象\n/kill [player number] \nexample: /kill 1",
-        'HELPER'    => "[救援]\n可以再每回合隨意救活被殺手殺死對象(當然也可以救活自己)\n/help [player number] \nexample: /help 1",
+        'KILLER'    => "[殺手]\n可以殺死任何對象\n/kill [玩者代碼] \nexample: /kill 1",
+        'HELPER'    => "[救援]\n可以再每回合隨意救活被殺手殺死對象(當然也可以救活自己)\n/help [玩者代碼] \nexample: /help 1",
+        'PEEPER'    => "[偷窺者]\n可偷看一人職業",
         'POLICE'    => "[警察]\n無",
         'VILLAGER'  => "[村民]\n無",
-        'PEEPER'    => "[偷窺者]\n可偷看一人職業"
     ];
     private $roleStatus = [
-        'NORMAL'  => 'Live',
-        'DEAD'    => 'Dead',
-        'HELP'    => 'Live-此回合被拯救',
-        'ARREST'  => 'Live',
-        'LEAVE'   => 'Leave'
+        'NORMAL'  => '存活中',
+        'DEAD'    => '已死亡',
+        'HELP'    => '存活中',
+        'ARREST'  => '存活中',
+        'LEAVE'   => '已逃離'
     ];
     private $events = [
         'STOP'     => '已動作',
@@ -519,14 +519,13 @@ class RoomManager{
     }
 
     public function setRoomRoleStatus($roomId, &$response){
-        $message = [ 'type' => 'text', 'text' => '目前房間人員狀態'.PHP_EOL ];
+        $message = [ 'type' => 'text', 'text' => '目前房間人員狀態'.PHP_EOL.'=================='.PHP_EOL ];
         $list = $this->lineBotDAO->findRoomList($roomId);
         foreach ($list as $key=>$user){
-            $message['text'] .= sprintf("Player %d - %s (%s) %s".PHP_EOL, 
+            $message['text'] .= sprintf("Player %d. %s 狀態: %s".PHP_EOL, 
                                     $key+1
                                     , $user['displayName']
                                     , $this->roleStatus[$user['status']]
-                                    , $this->events[$user['event']]
                                 );
         }
         $response['messages'][] = $message;
