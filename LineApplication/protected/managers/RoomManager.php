@@ -2,6 +2,7 @@
 class RoomManager{
     const ROOM_EVENT_STOP = 'STOP';
     const ROOM_EVENT_START = 'START';
+    const ROOM_EVENT_VOTE = 'VOTE';
 
     protected $MESSAGES = [
         'OPEN'                  => "遊戲房間已開啟\n1.請加入我(BOT)為好友\n2.並傳送房間代碼至BOT加入遊戲",
@@ -39,6 +40,10 @@ class RoomManager{
         'CHECKED_PERSON'        => "對象為 - %s",
         'KILLER_VICTORY'        => "殺手贏了",
         'KILLER_LOST'           => "殺手輸了",
+        'VOTE_TO'               => "%s投%s為兇手",
+        'VOTE_TOTAL'            => "%s獲得了%d票",
+        'VOTE_DEAD'             => "%s被大家當作兇手綁起來燒死了..",
+        'VOTE_ACTION'           => "可以開始投票認為誰是兇手...",
     ];
 
     protected $ROOM_STATUS = [
@@ -46,6 +51,7 @@ class RoomManager{
         'OPEN'      => 'OPEN',
         'START'     => 'START',
         'STOP'      => 'STOP',
+        'VOTE'      => 'VOTE',
         'END'       => 'END',
         'JOIN'      => 'JOIN',
     ];
@@ -304,11 +310,12 @@ class RoomManager{
         }else if($action == $this->ROLES['PEEPER'] && $userLiveRoom['role'] != $this->ROLES['PEEPER']){
             $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $userLiveRoom['role']);
             $response['messages'][] = $message;
-        }else if($userLiveRoom['roomStatus'] == $this->ROOM_STATUS['START']){
+        }else if(in_array($userLiveRoom['roomStatus'], [$this->ROOM_STATUS['START'], $this->ROOM_STATUS['VOTE']])){
             if($userLiveRoom['status'] == $this->ROLE_STATUS['DEAD']){
                 $message['text'] = $this->MESSAGES['YOU_ARE_DEAD'];
                 return $response['messages'][] = $message;
             }
+            $actionRoomStatus = ($userLiveRoom['roomStatus'] == $this->ROOM_STATUS['VOTE'])? self::ROOM_EVENT_VOTE: self::ROOM_EVENT_STOP;
             $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
             $totalPeople = count($list);
             if($command[1] < 1 || $command[1] > $totalPeople){
@@ -321,6 +328,7 @@ class RoomManager{
             $mustActionCount = 0;
             foreach ($list as $key=>$row){
                 $row['killCount'] = 0;
+                $row['voteCount'] = 0;
                 if($key+1 == $command[1]){
                     if($row['status'] == $this->ROLE_STATUS['LEAVE']){
                         $message['text'] = $this->MESSAGES['KILL_ARLEADY_EXIT'];
@@ -332,14 +340,16 @@ class RoomManager{
                     $target = $row;
                 }
                 $row['number'] = $key+1;
-                $setList[$row['userId']] = &$row;
                 if($row['status'] == $this->ROLE_STATUS['NORMAL']){
                     if($row['event'] == self::ROOM_EVENT_STOP){
                         $actionCount++;
                     }
-                    if(in_array($row['role'], [$this->ROLES['KILLER'], $this->ROLES['HELPER'], $this->ROLES['PEEPER']])){
+                    if($actionRoomStatus == self::ROOM_EVENT_VOTE){
+                        $mustActionCount++;
+                    }else if(in_array($row['role'], [$this->ROLES['KILLER'], $this->ROLES['HELPER'], $this->ROLES['PEEPER']])){
                         $mustActionCount++;
                     }
+                    $setList[$row['userId']] = &$row;
                 }
                 unset($row);
             }
@@ -352,15 +362,20 @@ class RoomManager{
                 $setList[$self['userId']]['toUserId'] = $target['userId'];
 
                 // Push message for room
-                $pushMessages = [];
-                $message['text'] = sprintf($this->MESSAGES['NIGHT_PERSON_ACTION'], $actionCount);
+                $pushMessages = $voteMessage = [];
+                if($actionRoomStatus == self::ROOM_EVENT_VOTE){
+                    $voteMessage[] = sprintf($this->MESSAGES['VOTE_TO'], $self['displayName'], $target['displayName']);
+                }else{
+                    $message['text'] = sprintf($this->MESSAGES['NIGHT_PERSON_ACTION'], $actionCount);
+                }
                 $pushMessages[] = $message;
                 if($mustActionCount <= $actionCount){
-                    $message['text'] = $this->MESSAGES['MONING_COMING'];
-                    $pushMessages[] = $message;
                     $mergeMessage = $killMessage = $helpMessage = $peepMessage = [];
                     foreach ($setList as $row){
-                        if($row['role'] == $this->ROLES['KILLER']){
+                        if($actionRoomStatus == self::ROOM_EVENT_VOTE){
+                            $setList[$row['toUserId']]['voteCount']++;
+                            $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], self::ROOM_EVENT_STOP);
+                        }else if($row['role'] == $this->ROLES['KILLER']){
                             if($setList[$row['toUserId']]['power'] != $this->ROLES['HELPER']){
                                 $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['DEAD'];
                                 $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['DEAD']);
@@ -383,10 +398,27 @@ class RoomManager{
                             $peepMessage[$row['userId']] = sprintf($this->MESSAGES['PEEP_SUCCESS'], $setList[$row['toUserId']]['displayName'], $this->roleName[$setList[$row['toUserId']]['role']]);
                         }
                     }
+                    if($actionRoomStatus == self::ROOM_EVENT_VOTE){
+                        $maxUserId = $maxVote = 0;
+                        foreach ($setList as $row){
+                            $voteMessage[] = sprint($this->MESSAGES['VOTE_TOTAL'], $row['displayName'], $row['voteCount']);
+                            if($row['voteCount'] >= $maxVote){
+                                $maxUserId = $row['userId'];
+                                $maxVote = $row['voteCount'];
+                            }
+                        }
+                        $voteMessage[] = sprint($this->MESSAGES['VOTE_DEAD'], $setList[$maxUserId]['displayName']);
+                        $this->lineBotDAO->updateRoomList($self['roomId'], $maxUserId, '', $this->ROLE_STATUS['DEAD']);
+                    }else{
+                        $message['text'] = $this->MESSAGES['MONING_COMING'];
+                        $pushMessages[] = $message;
+                    }
                     $mergeMessage = array_merge($killMessage, $helpMessage);
+                    $mergeMessage = array_merge($mergeMessage, $voteMessage);
                     $message['text'] = implode(PHP_EOL, $mergeMessage);
                     $pushMessages[] = $message;
 
+                    // Check the game is end
                     $all_killer_del = false;
                     $all_normal_del = false;
                     foreach ($setList as $row){
@@ -398,10 +430,16 @@ class RoomManager{
                             }
                         }
                     }
-                    
+
                     // Change status for this room.
                     if($all_normal_del === true && $all_killer_del == true){
-                        $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
+                        if($actionRoomStatus == self::ROOM_EVENT_VOTE){
+                            $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
+                        }else{
+                            $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['VOTE']);
+                            $message['text'] = $this->MESSAGES['VOTE_ACTION'];
+                            $pushMessages[] = $message;
+                        }
                     }else{
                         $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['END']);
                         if($all_killer_del == true){
@@ -528,10 +566,10 @@ class RoomManager{
         $message = [ 'type' => 'text', 'text' => '目前房間人員狀態'.PHP_EOL.'=================='.PHP_EOL ];
         $list = $this->lineBotDAO->findRoomList($roomId);
         foreach ($list as $key=>$user){
-            $message['text'] .= sprintf("Player %d. %s 狀態: %s".PHP_EOL, 
+            $message['text'] .= sprintf("Player %d. 狀態: %s 名稱:%s ".PHP_EOL, 
                                     $key+1
-                                    , $user['displayName']
                                     , $this->roleStatus[$user['status']]
+                                    , $user['displayName']
                                 );
         }
         $response['messages'][] = $message;

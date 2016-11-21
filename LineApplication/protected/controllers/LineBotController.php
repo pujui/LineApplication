@@ -167,6 +167,8 @@ class LineBotController extends FrameController{
             $roomManager->leave($userId, $command, $response);
         }else if($command[0] == '/kill'){
             $roomManager->action($userId, $command, $response, 'KILLER');
+        }else if($command[0] == '/vote'){
+            $roomManager->action($userId, $command, $response, 'VOTE');
         }else if($command[0] == '/next'){
             $roomManager->next($userId, $command, $response);
         }else if($command[0] == '/help'){
