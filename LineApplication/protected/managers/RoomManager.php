@@ -240,7 +240,7 @@ class RoomManager{
                         $setList[$user['id']]['role'] = $this->role[$r_k]['role'];
                         $setList[$user['id']]['roleName'] = $this->roleName[$this->role[$r_k]['role']];
                     }
-                    $this->lineBotDAO->updateRoomList($roomId, $user['userId'], $setList[$user['id']]['role'], $this->ROLE_STATUS['NORMAL'], self::ROOM_EVENT_STAR, 'CLEAR');
+                    $this->lineBotDAO->updateRoomList($roomId, $user['userId'], $setList[$user['id']]['role'], $this->ROLE_STATUS['NORMAL'], self::ROOM_EVENT_START, 'CLEAR');
                 }
                 // Set role message on room
                 $message['text'] = $this->MESSAGES['START_ARLEADY'];
