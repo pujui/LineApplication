@@ -414,7 +414,6 @@ class RoomManager{
                         $pushMessages[] = $message;
                     }
                     $mergeMessage = array_merge($killMessage, $helpMessage);
-                    $mergeMessage = array_merge($mergeMessage, $voteMessage);
                     $message['text'] = implode(PHP_EOL, $mergeMessage);
                     $pushMessages[] = $message;
 
@@ -449,8 +448,9 @@ class RoomManager{
                         }
                         $pushMessages[] = $message;
                     }
-                
                 }
+                $message['text'] = implode(PHP_EOL, $voteMessage);
+                $pushMessages[] = $message;
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
 
                 // set return message
