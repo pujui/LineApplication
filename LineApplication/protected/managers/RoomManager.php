@@ -449,12 +449,11 @@ class RoomManager{
                         $pushMessages[] = $message;
                     }
                 }
-                var_dump($voteMessage);
-                exit;
                 $message['text'] = implode(PHP_EOL, $voteMessage);
                 $pushMessages[] = $message;
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
-
+                var_dump($pushMessages);
+                exit;
                 // set return message
                 $message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
                 $response['messages'][] = $message;
