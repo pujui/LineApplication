@@ -144,7 +144,7 @@ class LineBotDAO extends BaseDAO{
             ':roomId'       => (string)$roomId,
         ];
         $sql = "UPDATE LineBot.room_list
-                SET toUserId='' , updateTime=NOW()
+                SET toUserId='' , event='START', updateTime=NOW()
                 WHERE roomId=:roomId ";
         $this->bindQuery($sql, $bind);
     }

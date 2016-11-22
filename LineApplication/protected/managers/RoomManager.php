@@ -507,10 +507,7 @@ class RoomManager{
         if(empty($userLiveRoom)){
             $response['messages'][] = $message;
         }else if($userLiveRoom['roomStatus'] == $this->ROOM_STATUS['STOP']){
-            $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
-            foreach ($list as $row){
-                $this->lineBotDAO->updateRoomList($roomId, $row['userId'], '', '', self::ROOM_EVENT_START, 'CLEAR');
-            }
+            $this->lineBotDAO->updateRoomListClear($userLiveRoom['roomId']);
             // Change status for this room.
             $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['START']);
             $message['text'] = $this->MESSAGES['NIGHT_COMING'];
@@ -560,10 +557,7 @@ class RoomManager{
             $response['messages'][] = $message;
         }else if($roomInfo['status'] == $this->ROOM_STATUS['END']){
             $this->lineBotDAO->setRoom($roomId, $this->ROOM_STATUS['OPEN']);
-            $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
-            foreach ($list as $row){
-                $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', $this->ROLE_STATUS['NORMAL'], 'CLEAR');
-            }
+            $this->lineBotDAO->updateRoomListClear($roomId);
             $message['text'] = $this->MESSAGES['RESET_SUCCESS'];
             $response['messages'][] = $message;
         }else{
