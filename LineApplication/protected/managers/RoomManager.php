@@ -498,9 +498,7 @@ class RoomManager{
         }else if($userLiveRoom['roomStatus'] == $this->ROOM_STATUS['STOP']){
             $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
             foreach ($list as $row){
-                if($row['status'] == $this->ROLE_STATUS['NORMAL']){
-                    $this->lineBotDAO->updateRoomList($roomId, $row['userId'], '', '', self::ROOM_EVENT_START);
-                }
+                $this->lineBotDAO->updateRoomList($roomId, $row['userId'], '', '', self::ROOM_EVENT_START);
             }
             // Change status for this room.
             $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['START']);
