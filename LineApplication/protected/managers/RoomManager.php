@@ -518,6 +518,10 @@ class RoomManager{
             $message['text'] = $this->MESSAGES['NIGHT_COMING'];
             $pushMessages['messages'] = [$message];
             $this->setRoomRoleStatus($userLiveRoom['roomId'], $pushMessages);
+            $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
+            foreach ($list as $row){
+                $this->parent->actionPushMessages($row['userId'], $pushMessages['messages']);
+            }
             $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages['messages']);
         }else{
             $message['text'] = $this->MESSAGES['DO_NOT_NEXT'];
