@@ -408,10 +408,12 @@ class RoomManager{
                         $maxUserId = $maxVote = 0;
                         $voteMessage[] = $this->MESSAGES['VOTE_MESSAGE'];
                         foreach ($setList as $row){
-                            $voteMessage[] = sprintf($this->MESSAGES['VOTE_TOTAL'], $row['displayName'], $row['voteCount']);
-                            if($row['voteCount'] >= $maxVote){
-                                $maxUserId = $row['userId'];
-                                $maxVote = $row['voteCount'];
+                            if($row['status'] == $this->ROLE_STATUS['NORMAL']){
+                                $voteMessage[] = sprintf($this->MESSAGES['VOTE_TOTAL'], $row['displayName'], $row['voteCount']);
+                                if($row['voteCount'] >= $maxVote){
+                                    $maxUserId = $row['userId'];
+                                    $maxVote = $row['voteCount'];
+                                }
                             }
                         }
                         $voteMessage[] = sprintf($this->MESSAGES['VOTE_DEAD'], $setList[$maxUserId]['displayName']);
@@ -443,6 +445,7 @@ class RoomManager{
                             $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['STOP']);
                         }else{
                             $this->lineBotDAO->setRoom($userLiveRoom['roomId'], $this->ROOM_STATUS['VOTE']);
+                            $this->lineBotDAO->updateRoomListClear($userLiveRoom['roomId']);
                             $message['text'] = $this->MESSAGES['VOTE_ACTION'];
                             $pushMessages[] = $message;
                         }

@@ -139,6 +139,16 @@ class LineBotDAO extends BaseDAO{
         $this->bindQuery($sql, $bind);
     }
     
+    public function updateRoomListClear($roomId){
+        $bind = [
+            ':roomId'       => (string)$roomId,
+        ];
+        $sql = "UPDATE LineBot.room_list
+                SET toUserId='' , updateTime=NOW()
+                WHERE roomId=:roomId ";
+        $this->bindQuery($sql, $bind);
+    }
+    
     public function deleteRoomList($roomId, $userId){
         $bind = [
             ':userId'       => (string)$userId,
