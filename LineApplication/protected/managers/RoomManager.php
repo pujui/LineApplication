@@ -462,6 +462,9 @@ class RoomManager{
                 $message['text'] = implode(PHP_EOL, $voteMessage);
                 if(!empty($message['text'])) $pushMessages[] = $message;
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
+                foreach ($setList as $row){
+                    $this->parent->actionPushMessages($row['userId'], $pushMessages);
+                }
                 // set return message
                 $message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
                 $response['messages'][] = $message;
