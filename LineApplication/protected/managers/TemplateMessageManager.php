@@ -41,4 +41,17 @@ class TemplateMessageManager{
         }
         $this->parent->actionPushTemplateButonMessages($userId, '救援名單-%d', '選擇對象', $messages);
     }
+
+    public function VOTE($userId, $list){
+        $messages = [];
+        $action = ['type' => 'message', 'label' => '', 'text' => '/vote %d'];
+        foreach ($list as $number=>$row){
+            if($row['status'] == 'NORMAL'){
+                $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
+                $action['text'] = sprintf('/vote %d', $number+1);
+                $messages[] = $action;
+            }
+        }
+        $this->parent->actionPushTemplateButonMessages($userId, '投票名單-%d', '選擇對象', $messages);
+    }
 }
