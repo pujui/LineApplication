@@ -234,7 +234,7 @@ class LineBotController extends FrameController{
                 $template['template']['title'] = sprintf($template['template']['title'], $count);
                 $template['template']['actions'] = $row;
                 $postData[] = $template;
-                $count++;
+                $count+=1;
             }
             $postMessages = [ 'to' => $id, 'messages'  => $postData ];
             $ch = curl_init();
