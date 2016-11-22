@@ -471,8 +471,8 @@ class RoomManager{
                     $this->parent->actionPushMessages($row['userId'], $pushMessages);
                 }
                 // set return message
-                $message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
-                $response['messages'][] = $message;
+                //$message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
+                //$response['messages'][] = $message;
 
                 if(!empty($peepMessage)){
                     foreach ($peepMessage as $peep_u=>$peep_m){
