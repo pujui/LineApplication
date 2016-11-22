@@ -367,8 +367,8 @@ class RoomManager{
                     $voteMessage[] = sprintf($this->MESSAGES['VOTE_TO'], $self['displayName'], $target['displayName']);
                 }else{
                     $message['text'] = sprintf($this->MESSAGES['NIGHT_PERSON_ACTION'], $actionCount);
+                    $pushMessages[] = $message;
                 }
-                $pushMessages[] = $message;
                 if($mustActionCount <= $actionCount){
                     $mergeMessage = $killMessage = $helpMessage = $peepMessage = [];
                     foreach ($setList as $row){
@@ -450,10 +450,8 @@ class RoomManager{
                     }
                 }
                 $message['text'] = implode(PHP_EOL, $voteMessage);
-                $pushMessages[] = $message;
+                if(!empty($message['text'])) $pushMessages[] = $message;
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
-                var_dump($pushMessages);
-                exit;
                 // set return message
                 $message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
                 $response['messages'][] = $message;
