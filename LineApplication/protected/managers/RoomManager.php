@@ -42,7 +42,8 @@ class RoomManager{
         'KILLER_LOST'           => "殺手輸了",
         'VOTE_TO'               => "%s投%s為兇手",
         'VOTE_TOTAL'            => "%s獲得了%d票",
-        'VOTE_DEAD'             => "%s被大家當作兇手綁起來燒死了..",
+        'VOTE_MESSAGE'          => "=====投票結果=====",
+        'VOTE_DEAD'             => "===============\n%s被大家當作兇手綁起來燒死了..",
         'VOTE_ACTION'           => "可以開始投票認為誰是兇手...",
     ];
 
@@ -400,6 +401,7 @@ class RoomManager{
                     }
                     if($actionRoomStatus == self::ROOM_EVENT_VOTE){
                         $maxUserId = $maxVote = 0;
+                        $voteMessage[] = $this->MESSAGES['VOTE_MESSAGE'];
                         foreach ($setList as $row){
                             $voteMessage[] = sprintf($this->MESSAGES['VOTE_TOTAL'], $row['displayName'], $row['voteCount']);
                             if($row['voteCount'] >= $maxVote){
