@@ -235,7 +235,7 @@ class RoomManager{
                 }
                 shuffle($randomList);
                 // Protect limit with role
-                $checkProtectedNumber = rand(2, 3);
+                $checkProtectedNumber = rand(3, 4);
                 foreach ($randomList as $key=>$user){
                     if($checkProtectedNumber < 0){
                         $r_k = ($key+1)%4;
