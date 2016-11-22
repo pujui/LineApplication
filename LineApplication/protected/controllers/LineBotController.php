@@ -204,7 +204,6 @@ class LineBotController extends FrameController{
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postMessages));
         $result = curl_exec($ch);
-        echo $result;
         curl_close($ch);
     }
 

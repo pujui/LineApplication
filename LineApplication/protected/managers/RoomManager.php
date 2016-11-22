@@ -415,7 +415,7 @@ class RoomManager{
                     }
                     $mergeMessage = array_merge($killMessage, $helpMessage);
                     $message['text'] = implode(PHP_EOL, $mergeMessage);
-                    $pushMessages[] = $message;
+                    if(!empty($message['text'])) $pushMessages[] = $message;
 
                     // Check the game is end
                     $all_killer_del = false;
@@ -452,8 +452,6 @@ class RoomManager{
                 $message['text'] = implode(PHP_EOL, $voteMessage);
                 $pushMessages[] = $message;
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
-                var_dump($pushMessages);
-                exit;
                 // set return message
                 $message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
                 $response['messages'][] = $message;
