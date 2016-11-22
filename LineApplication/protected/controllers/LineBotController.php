@@ -217,25 +217,32 @@ class LineBotController extends FrameController{
             'Content-Type: application/json',
             self::TOKEN
         ];
-        $postData = [
-                        [
-                            'type'      => 'template',
-                            'altText'   => 'this is a buttons template',
-                            'template'  => [
-                                'type'  => 'buttons', 'title' => $title, 'text'  => $text,
-                                'actions' => $messages
-                            ]
+        $template = [
+                        'type'      => 'template',
+                        'altText'   => '該樣板只能手機看到',
+                        'template'  => [
+                            'type'  => 'buttons', 'title' => $title, 'text'  => $text,
+                            'actions' => []
                         ]
                     ];
-        $postMessages = [ 'to' => $id, 'messages'  => $postData ];
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://api.line.me/v2/bot/message/push');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postMessages));
-        $result = curl_exec($ch);
-        curl_close($ch);
+        $b_list = array_chunk($messages, 16);
+        foreach ($b_list as $s_list){
+            $postData = [];
+            $list = array_chunk($s_list, 4);
+            foreach ($list as $row){
+                $template['actions'] = $row;
+                $postData[] = $template;
+            }
+            $postMessages = [ 'to' => $id, 'messages'  => $postData ];
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://api.line.me/v2/bot/message/push');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postMessages));
+            $result = curl_exec($ch);
+            curl_close($ch);
+        }
     }
 
     private function exitHook($response){

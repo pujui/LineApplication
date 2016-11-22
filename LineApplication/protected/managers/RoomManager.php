@@ -320,7 +320,9 @@ class RoomManager{
             $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
             $totalPeople = count($list);
             if($command[1] == ''){
-                return $response['messages'][] = $this->parent->templateMessageManager->$action($userId, $list);
+                $this->parent->templateMessageManager->$action($userId, $list);
+                $message['text'] = '';
+                return $response['messages'][] = $message;
             }else if($command[1] < 1 || $command[1] > $totalPeople){
                 $message['text'] = $this->MESSAGES['KILL_NOT_EXIST'];
                 return $response['messages'][] = $message;
