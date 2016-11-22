@@ -226,12 +226,15 @@ class LineBotController extends FrameController{
                         ]
                     ];
         $b_list = array_chunk($messages, 16);
+        $count = 1;
         foreach ($b_list as $s_list){
             $postData = [];
             $list = array_chunk($s_list, 4);
             foreach ($list as $row){
+                $template['template']['title'] = sprintf($template['template']['title'], $count);
                 $template['template']['actions'] = $row;
                 $postData[] = $template;
+                $count++;
             }
             $postMessages = [ 'to' => $id, 'messages'  => $postData ];
             $ch = curl_init();
