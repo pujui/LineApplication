@@ -235,15 +235,20 @@ class RoomManager{
                 }
                 shuffle($randomList);
                 // Protect limit with role
-                $checkProtectedNumber = rand(3, 4);
+                $checkProtectedNumber = rand(2, 3);
+                $killerCount = floor(count($randomList)/8);
                 foreach ($randomList as $key=>$user){
                     if($checkProtectedNumber < 0){
-                        $r_k = ($key+1)%4;
-                        $setList[$user['id']]['role'] = $this->role[$r_k]['role'];
-                        $setList[$user['id']]['roleName'] = $this->roleName[$this->role[$r_k]['role']];
+                        $setList[$user['id']]['role'] = $this->role[$key]['role'];
+                        $setList[$user['id']]['roleName'] = $this->roleName[$this->role[$key]['role']];
                         $checkProtectedNumber--;
                     }else{
                         $r_k = (rand(0, 999)*$user['id'])%4;
+                        if($killerCount>0 && $r_k==0){
+                            $killerCount--;
+                        }else if($r_k==0){
+                            $r_k = 4;
+                        }
                         $setList[$user['id']]['role'] = $this->role[$r_k]['role'];
                         $setList[$user['id']]['roleName'] = $this->roleName[$this->role[$r_k]['role']];
                     }
