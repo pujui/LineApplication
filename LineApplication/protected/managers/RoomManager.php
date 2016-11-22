@@ -238,7 +238,7 @@ class RoomManager{
                 $checkProtectedNumber = rand(2, 3);
                 $killerCount = floor(count($randomList)/8);
                 foreach ($randomList as $key=>$user){
-                    if($checkProtectedNumber < 0){
+                    if($checkProtectedNumber > 0){
                         $setList[$user['id']]['role'] = $this->role[$key]['role'];
                         $setList[$user['id']]['roleName'] = $this->roleName[$this->role[$key]['role']];
                         $checkProtectedNumber--;
