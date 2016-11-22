@@ -449,6 +449,8 @@ class RoomManager{
                         $pushMessages[] = $message;
                     }
                 }
+                var_dump($voteMessage);
+                exit;
                 $message['text'] = implode(PHP_EOL, $voteMessage);
                 $pushMessages[] = $message;
                 $this->parent->actionPushMessages($userLiveRoom['roomId'], $pushMessages);
