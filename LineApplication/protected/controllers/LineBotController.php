@@ -20,7 +20,7 @@ class LineBotController extends FrameController{
             'Content-Type: application/json',
             self::TOKEN
         ];
-        /*
+        
         $postData = [
             'to' => $id,
             'messages' => [
@@ -29,7 +29,6 @@ class LineBotController extends FrameController{
                     'altText' => 'this is a buttons template',
                     'template' => [
                         'type' => 'buttons',
-                        'thumbnailImageUrl' => 'https://example.com/bot/images/image.jpg',
                         'title' => 'Menu',
                         'text' => 'Please select',
                         'actions' => [
@@ -38,7 +37,8 @@ class LineBotController extends FrameController{
                     ]
                 ]
             ]
-        ];*/
+        ];
+        /*
         $postData = [
             'to' => $id,
             'messages' => [
@@ -56,7 +56,7 @@ class LineBotController extends FrameController{
                     ]
                 ]
             ]
-        ];
+        ];*/
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.line.me/v2/bot/message/push');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
