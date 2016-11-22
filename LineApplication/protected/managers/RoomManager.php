@@ -281,7 +281,8 @@ class RoomManager{
             $response['messages'][] = $message;
         }else{
             // set leave for room
-            $this->lineBotDAO->updateRoomList($userLiveRoom['roomId'], $userId, '', $this->ROLE_STATUS['LEAVE']);
+            $this->lineBotDAO->deleteRoomList($userLiveRoom['roomId'], $userId);
+            //$this->lineBotDAO->updateRoomList($userLiveRoom['roomId'], $userId, '', $this->ROLE_STATUS['LEAVE']);
             // Push message for room
             $message['text'] = $userLiveRoom['displayName'].$this->MESSAGES['LEAVE_SUCCESS'];
             $response['messages'][] = $message;
