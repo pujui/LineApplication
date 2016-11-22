@@ -13,6 +13,7 @@ class TemplateMessageManager{
                 $messages[] = $action;
             }
         }
+        var_dump($messages);
         $this->parent->actionPushTemplateButonMessages($userId, '虐殺名單', '選擇對象', $messages);
     }
 }
