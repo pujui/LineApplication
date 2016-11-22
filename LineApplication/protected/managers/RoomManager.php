@@ -79,10 +79,10 @@ class RoomManager{
 
     private $role = [
         ['role' => 'KILLER', 'roleName' => '殺手'],
+        ['role' => 'PEEPER', 'roleName' => '偷窺者'],
         ['role' => 'HELPER', 'roleName' => '救援'],
         ['role' => 'POLICE', 'roleName' => '警察'],
         ['role' => 'VILLAGER', 'roleName' => '村民'],
-        ['role' => 'PEEPER', 'roleName' => '偷窺者']
     ];
     private $roleName = [
         'KILLER'    => "[殺手]\n可以殺死任何對象\n/kill [玩者代碼] \nexample: /kill 1",
@@ -235,13 +235,13 @@ class RoomManager{
                 }
                 shuffle($randomList);
                 // Protect limit with role
-                $checkProtectedNumber = 1;
+                $checkProtectedNumber = rand(2, 3);
                 foreach ($randomList as $key=>$user){
-                    if($checkProtectedNumber > 0){
+                    if($checkProtectedNumber < 0){
                         $r_k = ($key+1)%4;
                         $setList[$user['id']]['role'] = $this->role[$r_k]['role'];
                         $setList[$user['id']]['roleName'] = $this->roleName[$this->role[$r_k]['role']];
-                        if($r_k == 0) $checkProtectedNumber--;
+                        $checkProtectedNumber--;
                     }else{
                         $r_k = (rand(0, 999)*$user['id'])%4;
                         $setList[$user['id']]['role'] = $this->role[$r_k]['role'];
