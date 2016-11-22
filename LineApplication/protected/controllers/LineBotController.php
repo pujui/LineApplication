@@ -14,6 +14,8 @@ class LineBotController extends FrameController{
 
     protected $keyword = [
     ];
+    
+    public $templateMessageManager;
 
     public function actionJsonPush($id = '', $message = ''){
         $header = [
