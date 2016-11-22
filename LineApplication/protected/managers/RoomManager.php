@@ -319,7 +319,9 @@ class RoomManager{
             $actionRoomStatus = ($userLiveRoom['roomStatus'] == $this->ROOM_STATUS['VOTE'])? self::ROOM_EVENT_VOTE: self::ROOM_EVENT_STOP;
             $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
             $totalPeople = count($list);
-            if($command[1] < 1 || $command[1] > $totalPeople){
+            if($command[1] == ''){
+                return $response['messages'][] = $this->parent->templateMessageManager->$action($userId, $list);
+            }else if($command[1] < 1 || $command[1] > $totalPeople){
                 $message['text'] = $this->MESSAGES['KILL_NOT_EXIST'];
                 return $response['messages'][] = $message;
             }
@@ -565,7 +567,7 @@ class RoomManager{
         $message = [ 'type' => 'text', 'text' => '目前房間人員狀態'.PHP_EOL.'=================='.PHP_EOL ];
         $list = $this->lineBotDAO->findRoomList($roomId);
         foreach ($list as $key=>$user){
-            $message['text'] .= sprintf("Player %d. 狀態: %s - %s ".PHP_EOL, 
+            $message['text'] .= sprintf("Player %d. 狀態: %s\n  %s ".PHP_EOL, 
                                     $key+1
                                     , $this->roleStatus[$user['status']]
                                     , $user['displayName']

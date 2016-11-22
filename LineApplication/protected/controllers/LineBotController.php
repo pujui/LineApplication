@@ -145,6 +145,9 @@ class LineBotController extends FrameController{
         $command = explode(' ', trim($message));
         $roomManager = new RoomManager;
         $roomManager->parent = $this;
+        $this->templateMessageManager = new TemplateMessageManager;
+        $this->templateMessageManager->parent = $this;
+
         if($type == 'room' || $type == 'group'){
             if($message == '/open'){
                 $roomManager->open($userId, $message, $response);
@@ -197,6 +200,32 @@ class LineBotController extends FrameController{
             self::TOKEN
         ];
         $postMessages = [ 'to' => $id, 'messages'  => $messages ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.line.me/v2/bot/message/push');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postMessages));
+        $result = curl_exec($ch);
+        curl_close($ch);
+    }
+
+    public function actionPushTemplateButonMessages($id = '', $title = '', $text = '', $messages = []){
+        $header = [
+            'Content-Type: application/json',
+            self::TOKEN
+        ];
+        $postData = [
+                        [
+                            'type'      => 'template',
+                            'altText'   => 'this is a buttons template',
+                            'template'  => [
+                                'type'  => 'buttons', 'title' => $title, 'text'  => $text,
+                                'actions' => $messages
+                            ]
+                        ]
+                    ];
+        $postMessages = [ 'to' => $id, 'messages'  => $postData ];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.line.me/v2/bot/message/push');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
