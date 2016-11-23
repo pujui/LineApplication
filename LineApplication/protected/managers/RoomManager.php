@@ -5,46 +5,52 @@ class RoomManager{
     const ROOM_EVENT_VOTE = 'VOTE';
 
     protected $MESSAGES = [
-        'OPEN'                  => "遊戲房間已開啟\n1.請加入我(BOT)為好友\n2.並傳送房間代碼至BOT加入遊戲",
-        'WAITE_STATUS'          => "遊戲房間狀態: %s, 玩家人數: %d\n開始遊戲請在此房間輸入/start",
-        'JOIN'                  => "加入遊戲請輸入以下代碼傳送至我(BOT)",
+        'OPEN'                  => "大家好我是遊戲管理者,遊戲房間已經開啟,如果想加入遊戲請先要加入我為好友喔~",
+        'JOIN_START'            => "如果確認想『加入遊戲』,請複製『以下指令代碼』私訊給我喔~\n==========",
         'JOIN_COMMAND'          => "/join %s",
-        'START_STATUS'          => "遊戲房間狀態: %s, 玩家人數: %d\n遊戲已開始已無法加入遊戲只能觀看",
-        'START_NOT_EXIST'       => "遊戲房間未開啟, 請先輸入/open開啟房間並確認所有人加入後再開始",
-        'START_LIMIT'           => "遊戲人數最少四人",
-        'START_ARLEADY'         => "遊戲已準備好, 角色分配結束",
-        'JOIN_ROOM_NOT_EXIST'   => "遊戲房間不存在, 請確認是否複製錯誤",
-        'JOIN_ROOM_SUCCESS'     => "已加入遊戲",
-        'JOIN_ARLEADY_EXIST'    => "已在遊戲中",
-        'JOIN_EXIST'            => "已在其他遊戲中, 請/leave後再加入",
-        'LEAVE_NOT_EXIST'       => "你目前無在任何遊戲內",
-        'LEAVE_SUCCESS'         => "已離開遊戲",
+        'JOIN_END'              => "==========",
+        'JOIN_ROOM_SUCCESS'     => "加入遊戲成功",
+        'JOIN_ROOM_SUCCESS_ALL' => "通告大家%s加入遊戲囉!",
+        'JOIN_ROOM_NOT_EXIST'   => "您想加入的遊戲不存在唉,請確認是否複製錯誤了呢~系統是不會錯誤的喔!!",
+        'JOIN_ARLEADY_EXIST'    => "您已經加入遊戲了!請問您有事嗎?不要測試我喔",
+        'JOIN_EXIST'            => "您已經在其他遊戲中了喔!請不要腳踏兩條船喔!我可以偷偷告訴你輸入/leave可以離開遊戲喔!但是壞掉不負責喔~",
+        'WAITE_STATUS'          => "哈囉~遊戲目前情況不能跟你說喔,但可以跟你說目前已加入遊戲人數為%d人",
+        'WAITE_STATUS_OPEN'     => "各位房間內的玩家目前房間狀態為『開啟中』,已加入遊戲人數為%d人",
+        'WAITE_STATUS_JOIN'     => "哈囉~您已加入遊戲,目前已加入遊戲人數為%d人",
+        'WAITE_STATUS_START'    => "哈囉~目前遊戲已經開始無法再加入遊戲,只可以從群組聊天室中觀看遊戲情況,而目前已加入遊戲人數為%d人",
+        'START_NOT_EXIST'       => "不好意思啦~還未開起遊戲!想開啟遊戲請大聲跟我說喔~",
+        'START_LIMIT'           => "加入由遊戲人數最少要四人不然遊戲會很無聊滴",
+        'START'                 => "遊戲準備開始囉~",
+        'START_TIME'            => "遊戲%d後開始",
+        'START_ARLEADY'         => "各位羔羊們準備受死吧~~哇哈哈哈",
+        'NIGHT_COMING'          => "夜晚來臨了...村莊內的人都睡了除了某些怪咖...",
+        'LEAVE_NOT_EXIST'       => "您目前無在任何遊戲內",
+        'LEAVE_SUCCESS'         => "已經害怕的逃離村莊了",
         'ROLE_CHECKED'          => "您角色為 - %s",
-        'KILL_NOT_EXIST'        => "對象不存在",
+        'DO_NOT_ACTION'         => "你無法執行您角色為 - %s",
+        'KILL_NOT_EXIST'        => "你想要殺的對象不存在唉",
         'KILL_ARLEADY_EXIT'     => "對象已離開遊戲",
-        'KILL_ARLEADY_DEAD'     => "對象已死亡",
+        'KILL_ARLEADY_DEAD'     => "對象已經被殺死了",
         'KILL_CHECKED'          => "殺害對象為 - %s",
         'KILL_SUCCESS'          => "%s被殺死了...",
         'KILL_AGAIN_SUCCESS'    => "%s被另一個人發現後鞭屍...",
         'KILL_AGAIN_FAILED'     => "被%s被鞭屍後的屍體嚇到尿褲子後死亡...",
-        'HELP_SUCCESS'          => "%s被剛上廁所的人拯救了...",
-        'DO_NOT_ACTION'         => "你無法執行您角色為 - %s",
+        'HELP_SUCCESS'          => "%s被剛上廁所的護士發現救活了...",
         'NIGHT_PERSON_ACTION'   => "已有 %d 名夜貓子在夜間行動",
-        'NIGHT_COMING'          => "當黑夜來臨了...",
-        'MONING_COMING'         => "當清晨來臨了...",
+        'MONING_COMING'         => "當太陽升起來了...有村民發現了並通知大家",
         'DO_NOT_NEXT'           => "黑夜時間還沒到",
-        'YOU_ARE_DEAD'          => "你已經死了",
+        'YOU_ARE_DEAD'          => "您已經死了請等遊戲結束吧",
         'RESET_SUCCESS'         => "遊戲房間已重新開始",
         'RESET_FAILED'          => "遊戲未結束無法重新開始",
         'PEEP_SUCCESS'          => "%s身分為%s ",
-        'CHECKED_PERSON'        => "對象為 - %s",
-        'KILLER_VICTORY'        => "殺手贏了",
-        'KILLER_LOST'           => "殺手輸了",
-        'VOTE_TO'               => "%s投%s為兇手",
+        'CHECKED_PERSON'        => "你選擇的對象為 - %s",
+        'KILLER_VICTORY'        => "村民被殺手殺光了拉..村莊迎來和平的一天?",
+        'KILLER_LOST'           => "殺手終於都死了...村莊迎來和平的一天",
+        'VOTE_TO'               => "%s認為%s為兇手",
         'VOTE_TOTAL'            => "%s獲得了%d票",
         'VOTE_MESSAGE'          => "=====投票結果=====",
         'VOTE_DEAD'             => "===============\n%s被大家當作兇手綁起來燒死了..",
-        'VOTE_ACTION'           => "可以開始投票認為誰是兇手...",
+        'VOTE_ACTION'           => "大家可以開始投票認為誰是兇手...",
     ];
 
     protected $ROOM_STATUS = [
@@ -78,18 +84,18 @@ class RoomManager{
     private $lineBotDAO;
 
     private $role = [
-        ['role' => 'KILLER', 'roleName' => '殺手'],
-        ['role' => 'PEEPER', 'roleName' => '偷窺者'],
-        ['role' => 'HELPER', 'roleName' => '救援'],
-        ['role' => 'POLICE', 'roleName' => '警察'],
+        ['role' => 'KILLER', 'roleName' => '殺人狂'],
+        ['role' => 'PEEPER', 'roleName' => '偷窺狂'],
+        ['role' => 'HELPER', 'roleName' => '護士'],
+        ['role' => 'POLICE', 'roleName' => '波麗士'],
         ['role' => 'VILLAGER', 'roleName' => '村民'],
     ];
     private $roleName = [
-        'KILLER'    => "[殺手]\n可以殺死任何對象\n/kill [玩者代碼] \nexample: /kill 1",
-        'HELPER'    => "[救援]\n可以再每回合隨意救活被殺手殺死對象(當然也可以救活自己)\n/help [玩者代碼] \nexample: /help 1",
-        'PEEPER'    => "[偷窺者]\n可偷看一人職業",
-        'POLICE'    => "[警察]\n無",
-        'VILLAGER'  => "[村民]\n無",
+        'KILLER'    => "[殺人狂]\n可以殺死任何對象\n/kill",
+        'HELPER'    => "[護士]\n可以再每回合隨意救活被殺手殺死對象\n/help",
+        'PEEPER'    => "[偷窺狂]\n可偷看一人職業\n/peep",
+        'POLICE'    => "[波麗士]\n雖然是警察可是跟村民一樣...只能起鬨投票將認為是兇手的殺死...所以乖乖睡覺吧",
+        'VILLAGER'  => "[村民]\n只能起鬨投票將認為是兇手的殺死...所以乖乖睡覺吧",
     ];
     private $roleStatus = [
         'NORMAL'  => '存活中',
@@ -170,7 +176,8 @@ class RoomManager{
             // Set role message on room
             $this->setRoomRoleStatus($roomId, $response);
             // Push message for room
-            $this->parent->actionPushMessages($roomId, $response['messages']);
+            $message['text'] = sprintf($this->MESSAGES['JOIN_ROOM_SUCCESS_ALL'], $response['displayName']);
+            $this->parent->actionPushMessages($roomId, [$message]);
         }else if($roomInfo['status'] == $this->ROOM_STATUS['START']){
             // Set status message on room
             $this->setRoomStatus($roomId, $roomInfo['status'], $response);
@@ -254,6 +261,15 @@ class RoomManager{
                     }
                     $this->lineBotDAO->updateRoomList($roomId, $user['userId'], $setList[$user['id']]['role'], $this->ROLE_STATUS['NORMAL'], self::ROOM_EVENT_START, 'CLEAR');
                 }
+
+                $message['text'] = $this->MESSAGES['START'];
+                $this->parent->actionPushMessages($roomId, [$message]);
+                for ($i = 3; $i > 0; $i--){
+                    sleep(1);
+                    $message['text'] = sprintf($this->MESSAGES['START_TIME'], $i);
+                    $this->parent->actionPushMessages($roomId, [$message]);
+                }
+
                 // Set role message on room
                 $message['text'] = $this->MESSAGES['START_ARLEADY'];
                 $response['messages'][] = $message;
@@ -262,7 +278,7 @@ class RoomManager{
                 $response['messages'][] = $message;
                 // Push message for everyone
                 foreach ($setList as $user){
-                    $message['text'] = sprintf($this->MESSAGES['ROLE_CHECKED'], $user['roleName']);
+                    $message['text'] = sprintf($this->MESSAGES['ROLE_CHECKED'], $this->roleName[$user['role']]);
                     $this->parent->actionPushMessages($user['userId'], [$message]);
                 }
             }
@@ -287,7 +303,6 @@ class RoomManager{
         }else{
             // set leave for room
             $this->lineBotDAO->deleteRoomList($userLiveRoom['roomId'], $userId);
-            //$this->lineBotDAO->updateRoomList($userLiveRoom['roomId'], $userId, '', $this->ROLE_STATUS['LEAVE']);
             // Push message for room
             $message['text'] = $userLiveRoom['displayName'].$this->MESSAGES['LEAVE_SUCCESS'];
             $response['messages'][] = $message;
@@ -309,13 +324,13 @@ class RoomManager{
             $message['text'] = $this->MESSAGES['LEAVE_NOT_EXIST'];
             $response['messages'][] = $message;
         }else if($action == $this->ROLES['KILLER'] && $userLiveRoom['role'] != $this->ROLES['KILLER']){
-            $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $userLiveRoom['role']);
+            $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $this->roleName[$userLiveRoom['role']]);
             $response['messages'][] = $message;
         }else if($action == $this->ROLES['HELPER'] && $userLiveRoom['role'] != $this->ROLES['HELPER']){
-            $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $userLiveRoom['role']);
+            $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $this->roleName[$userLiveRoom['role']]);
             $response['messages'][] = $message;
         }else if($action == $this->ROLES['PEEPER'] && $userLiveRoom['role'] != $this->ROLES['PEEPER']){
-            $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $userLiveRoom['role']);
+            $message['text'] = sprintf($this->MESSAGES['DO_NOT_ACTION'], $this->roleName[$userLiveRoom['role']]);
             $response['messages'][] = $message;
         }else if(in_array($userLiveRoom['roomStatus'], [$this->ROOM_STATUS['START'], $this->ROOM_STATUS['VOTE']])){
             if($userLiveRoom['status'] == $this->ROLE_STATUS['DEAD']){
@@ -462,6 +477,10 @@ class RoomManager{
                             $message['text'] = $this->MESSAGES['KILLER_LOST'];
                         }
                         $pushMessages[] = $message;
+
+                        // set return message
+                        $message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
+                        $response['messages'][] = $message;
                     }
                 }
                 $message['text'] = implode(PHP_EOL, $voteMessage);
@@ -470,9 +489,6 @@ class RoomManager{
                 foreach ($setList as $row){
                     $this->parent->actionPushMessages($row['userId'], $pushMessages);
                 }
-                // set return message
-                //$message['text'] = sprintf($this->MESSAGES['CHECKED_PERSON'], $target['displayName']);
-                //$response['messages'][] = $message;
 
                 if(!empty($peepMessage)){
                     foreach ($peepMessage as $peep_u=>$peep_m){
@@ -576,10 +592,10 @@ class RoomManager{
     }
 
     public function setRoomRoleStatus($roomId, &$response){
-        $message = [ 'type' => 'text', 'text' => '目前房間人員狀態'.PHP_EOL.'=================='.PHP_EOL ];
+        $message = [ 'type' => 'text', 'text' => '而目前房間人員狀態'.PHP_EOL.'=================='.PHP_EOL ];
         $list = $this->lineBotDAO->findRoomList($roomId);
         foreach ($list as $key=>$user){
-            $message['text'] .= sprintf("Player %d. 狀態: %s\n  %s ".PHP_EOL, 
+            $message['text'] .= sprintf("Player %d. 狀態: 『%s』\n===== %s ".PHP_EOL, 
                                     $key+1
                                     , $this->roleStatus[$user['status']]
                                     , $user['displayName']
@@ -592,24 +608,22 @@ class RoomManager{
         $message = [ 'type' => 'text', 'text' => '' ];
         $list = $this->lineBotDAO->findRoomList($roomId);
         if($status == $this->ROOM_STATUS['CREATE']){
-            $message['text'] = sprintf($this->MESSAGES['OPEN'], $status, count($list));
-            $response['messages'][] = $message;
-            $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS'], $status, count($list))
-                               .PHP_EOL .$this->MESSAGES['JOIN'];
+            $message['text'] = $this->MESSAGES['OPEN'].PHP_EOL.$this->MESSAGES['JOIN_START'];
             $response['messages'][] = $message;
             $message['text'] = sprintf($this->MESSAGES['JOIN_COMMAND'], $roomId);
+            $response['messages'][] = $message;
+            $message['text'] = $this->MESSAGES['JOIN_END'];
             $response['messages'][] = $message;
         }else if($status == $this->ROOM_STATUS['OPEN']){
-            $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS'], $status, count($list))
-                               .PHP_EOL .$this->MESSAGES['JOIN'];
+            $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS_OPEN'], count($list))
+                               .PHP_EOL .$this->MESSAGES['JOIN_START'];
             $response['messages'][] = $message;
             $message['text'] = sprintf($this->MESSAGES['JOIN_COMMAND'], $roomId);
             $response['messages'][] = $message;
-        }else if($status == $this->ROOM_STATUS['JOIN']){
-            $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS'], $this->ROOM_STATUS['OPEN'], count($list));
+            $message['text'] = $this->MESSAGES['JOIN_END'];
             $response['messages'][] = $message;
-        }else if($status == $this->ROOM_STATUS['START']){
-            $message['text'] = sprintf($this->MESSAGES['START_STATUS'], $status, count($list));
+        }else{
+            $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS'.$status], count($list));
             $response['messages'][] = $message;
         }
     }
