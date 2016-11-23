@@ -620,7 +620,11 @@ class RoomManager{
             $message['text'] = sprintf($this->MESSAGES['JOIN_COMMAND'], $roomId);
             $response['messages'][] = $message;
         }else{
-            $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS'.$status], count($list));
+            if(isset($this->MESSAGES['WAITE_STATUS_'.$status])){
+                $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS_'.$status], count($list));
+            }else{
+                $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS'], count($list));
+            }
             $response['messages'][] = $message;
         }
     }

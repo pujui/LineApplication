@@ -2,7 +2,7 @@
 class SentenceCase{
     
     private $patterns = [
-        "/^[\x4e00-\x9fa5]/u" => '/start',
+        "/開啟/u" => '/start',
     ];
 	
     public function getResult($message){
