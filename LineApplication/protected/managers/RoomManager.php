@@ -6,9 +6,8 @@ class RoomManager{
 
     protected $MESSAGES = [
         'OPEN'                  => "大家好我是遊戲管理者,遊戲房間已經開啟,如果想加入遊戲請先要加入我為好友喔~",
-        'JOIN_START'            => "如果確認想『加入遊戲』,請複製『以下指令代碼』私訊給我喔~\n==========",
+        'JOIN_START'            => "如果確認想『加入遊戲』,請複製『以下指令代碼』私訊給我喔~",
         'JOIN_COMMAND'          => "/join %s",
-        'JOIN_END'              => "==========",
         'JOIN_ROOM_SUCCESS'     => "加入遊戲成功",
         'JOIN_ROOM_SUCCESS_ALL' => "通告大家%s加入遊戲囉!",
         'JOIN_ROOM_NOT_EXIST'   => "您想加入的遊戲不存在唉,請確認是否複製錯誤了呢~系統是不會錯誤的喔!!",
@@ -608,19 +607,17 @@ class RoomManager{
         $message = [ 'type' => 'text', 'text' => '' ];
         $list = $this->lineBotDAO->findRoomList($roomId);
         if($status == $this->ROOM_STATUS['CREATE']){
-            $message['text'] = $this->MESSAGES['OPEN'].PHP_EOL.$this->MESSAGES['JOIN_START'];
+            $message['text'] = $this->MESSAGES['OPEN'];
+            $response['messages'][] = $message;
+            $message['text'] = $this->MESSAGES['JOIN_START'];
             $response['messages'][] = $message;
             $message['text'] = sprintf($this->MESSAGES['JOIN_COMMAND'], $roomId);
-            $response['messages'][] = $message;
-            $message['text'] = $this->MESSAGES['JOIN_END'];
             $response['messages'][] = $message;
         }else if($status == $this->ROOM_STATUS['OPEN']){
             $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS_OPEN'], count($list))
                                .PHP_EOL .$this->MESSAGES['JOIN_START'];
             $response['messages'][] = $message;
             $message['text'] = sprintf($this->MESSAGES['JOIN_COMMAND'], $roomId);
-            $response['messages'][] = $message;
-            $message['text'] = $this->MESSAGES['JOIN_END'];
             $response['messages'][] = $message;
         }else{
             $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS'.$status], count($list));
