@@ -96,6 +96,9 @@ class LineBotController extends FrameController{
         }
         $this->setUserMode($userId, $message, $response);
 
+        $sentenceCase = new SentenceCase();
+        $message = $sentenceCase->getResult($message);
+
         $command = explode(' ', trim($message));
         $roomManager = new RoomManager;
         $roomManager->parent = $this;
