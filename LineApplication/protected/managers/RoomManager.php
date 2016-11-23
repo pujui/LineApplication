@@ -171,7 +171,7 @@ class RoomManager{
             $message['text'] = $response['displayName'].$this->MESSAGES['JOIN_ROOM_SUCCESS'];
             $response['messages'][] = $message;
             // Set status message on room
-            $this->setRoomStatus($roomId, $this->ROOM_STATUS['JOIN'], $response);
+            $this->setRoomStatus($roomId, 'JOIN', $response);
             // Set role message on room
             $this->setRoomRoleStatus($roomId, $response);
             // Push message for room
@@ -207,7 +207,7 @@ class RoomManager{
             $message['text'] = $response['displayName'].$this->MESSAGES['JOIN_ROOM_SUCCESS'];
             $response['messages'][] = $message;
             // Set status message on room
-            $this->setRoomStatus($roomId, $this->ROOM_STATUS['JOIN'], $response);
+            $this->setRoomStatus($roomId, 'JOIN', $response);
             // Set role message on room
             $this->setRoomRoleStatus($roomId, $response);
         }
