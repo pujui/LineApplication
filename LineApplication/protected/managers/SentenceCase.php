@@ -10,6 +10,7 @@ class SentenceCase{
         '/help'     => ['/救/i',],
         '/vote'     => ['/投票/i',],
         '/close'     => ['/關閉|刪除/i',],
+        '/role'     => ['/腳色|角色|角色/i',],
     ];
 
     public function getResult($message){
