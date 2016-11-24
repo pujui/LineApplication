@@ -14,10 +14,10 @@ class SentenceCase{
 
     public function getResult($message){
         $mainPatterns = [
-            'OK' => ['/我/i']
+            'OK' => ['/我|幫/i']
         ];
         $subMainPatterns = [
-            'OK' => ['/要|查|能|刪|關/i']
+            'OK' => ['/要|查|能|刪|關|我/i']
         ];
         $r = $this->_main($mainPatterns, $message);
         if($r !== FALSE){
