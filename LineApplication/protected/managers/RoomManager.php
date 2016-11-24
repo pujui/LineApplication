@@ -433,12 +433,13 @@ class RoomManager{
                 }
                 if($mustActionCount <= $actionCount){
                     $mergeMessage = $killMessage = $helpMessage = $peepMessage = [];
+                    $peopleNow = count($setList);
                     foreach ($setList as $row){
                         if($actionRoomStatus == self::ROOM_EVENT_VOTE){
                             $setList[$row['toUserId']]['voteCount']++;
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', '', self::ROOM_EVENT_STOP);
                         }else if($row['role'] == $this->ROLES['KILLER']){
-                            if($setList[$row['toUserId']]['power'] != $this->ROLES['HELPER'] || count($setList) == 2){
+                            if($setList[$row['toUserId']]['power'] != $this->ROLES['HELPER'] || $peopleNow == 2){
                                 $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['DEAD'];
                                 $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['DEAD']);
                             }
@@ -451,7 +452,7 @@ class RoomManager{
                                 $killMessage[] = sprintf($this->MESSAGES['KILL_AGAIN_SUCCESS'], $setList[$row['toUserId']]['displayName']);
                             }
                             $setList[$row['toUserId']]['killCount']++;
-                        }else if($row['role'] == $this->ROLES['HELPER'] && $row['toUserId'] !='' && count($setList) > 2){
+                        }else if($row['role'] == $this->ROLES['HELPER'] && $row['toUserId'] !='' && $peopleNow > 2){
                             $setList[$row['toUserId']]['power'] = $this->ROLES['HELPER'];
                             $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['NORMAL'];
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['NORMAL']);
