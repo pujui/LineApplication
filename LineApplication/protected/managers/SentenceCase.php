@@ -2,17 +2,37 @@
 class SentenceCase{
     
     private $patterns = [
-        '/open' => ['/我/i', '/開|想|要/i', '/房/i',],
-        '/start' => ['/我/i', '/開|想|要/i', '/遊戲/i',],
-        '/status' => ['/我/i', '/查|要|開/i', '/狀|情/i',],
-        '/kill' => ['/我/i', '/要|想|開/i', '/殺/i',],
-        '/peep' => ['/我/i', '/要|想/i', '/看/i',],
-        '/help' => ['/我/i', '/要|想/i', '/救/i',],
+        '/open'     => ['/房/i',],
+        '/start'    => ['/遊戲/i',],
+        '/status'   => ['/狀|情/i',],
+        '/kill'     => ['/殺/i',],
+        '/peep'     => ['/看/i',],
+        '/help'     => ['/救/i',],
+        '/vote'     => ['/投票/i',],
     ];
-	
+
     public function getResult($message){
-        
-        foreach ($this->patterns as $command=>$patterns){
+        $mainPatterns = [
+            '/我/i'
+        ];
+        $subMainPatterns = [
+            '/要|開|查|能/i'
+        ];
+        $r = $this->_main($mainPatterns, $message);
+        if($r !== FALSE){
+            $r = $this->_main($subMainPatterns, $message);
+            if($r !== FALSE){
+                $r = $this->_main($this->patterns, $message);
+                if($r !== FALSE){
+                    return $r;
+                }
+            }
+        }
+        return $message;
+    }
+
+    private function _main($patterns, $message){
+        foreach ($patterns as $command=>$patterns){
             $status = true;
             foreach ($patterns as $pattern){
                 if(!preg_match($pattern, $message)){
@@ -22,6 +42,7 @@ class SentenceCase{
             }
             if($status) return $command;
         }
-        return $message;
+        return false;
     }
+
 }

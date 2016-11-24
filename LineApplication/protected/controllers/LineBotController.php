@@ -1,15 +1,22 @@
 <?php
 /**
- * room
- *  /open 開新房間
+ * room/group
+ *  /open
+ *  /start
+ *  /status
+ *  /next
+ * user
+ *  /kill
+ *  /peep
+ *  /help
+ *  /vote
+ *  /status
+ *  /next
  * @author PuJui
  *
  */
 class LineBotController extends FrameController{
 
-    const MESSAGE_ROOM_SETTING = "請選擇你要使用系統方式:\n/open 開啟遊戲防\n/start 開始遊戲\n/status 查詢房間狀態\n";
-    const MESSAGE_BOT_SETTING = "請選擇你要使用系統方式:\n/join [room token] 加入遊戲防\n/leave [player number] 離開遊戲防\n/kill [player number] 殺死目標\n/help [player number] 拯救目標\n/arrest [player number] 逮捕目標\n";
-    
     const TOKEN = 'Authorization: Bearer +EcHH6lvAf/A5uW512v+RANnVU/+tRQaMJkS4KkxtuAnmUjtwz9aiIx2V/5rYeH3k7vjxh4t549kvUUvZfSQc1KVDobOM7izPQgzMWqym+7NXH9xvcym0DlriDnGWZQ5Fy5XFA1m/I1WajRZHx9xyQdB04t89/1O/w1cDnyilFU=';
 
     protected $keyword = [
