@@ -157,4 +157,12 @@ class LineBotDAO extends BaseDAO{
         $sql = "DELETE FROM LineBot.room_list WHERE userId=:userId AND roomId=:roomId ";
         $this->bindQuery($sql, $bind);
     }
+
+    public function deleteRoom($roomId){
+        $bind = [
+            ':roomId'       => (string)$roomId,
+        ];
+        $sql = "DELETE FROM LineBot.room WHERE roomId=:roomId ";
+        $this->bindQuery($sql, $bind);
+    }
 }

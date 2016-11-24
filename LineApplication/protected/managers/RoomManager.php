@@ -50,6 +50,9 @@ class RoomManager{
         'VOTE_MESSAGE'          => "=====投票結果=====",
         'VOTE_DEAD'             => "===============\n%s被大家當作兇手綁起來燒死了..",
         'VOTE_ACTION'           => "大家可以開始投票認為誰是兇手...",
+        'DELETE_NOT_EXISTS'     => "遊戲房間不存在刪啥小",
+        'DELETE_SUCCESS'        => "遊戲房間幫你刪掉囉",
+        'DELETE_FAILED'         => "人都還沒被殺光想跑?",
     ];
 
     protected $ROOM_STATUS = [
@@ -306,6 +309,35 @@ class RoomManager{
             $message['text'] = $userLiveRoom['displayName'].$this->MESSAGES['LEAVE_SUCCESS'];
             $response['messages'][] = $message;
             $this->parent->actionPushMessages($userLiveRoom['roomId'], $response['messages']);
+        }
+    }
+
+    /**
+     * close the room by room
+     * @param unknown $userId
+     * @param unknown $message
+     * @param unknown $response
+     */
+    public function close($userId, $message, &$response){
+        $message = [ 'type' => 'text', 'text' => '' ];
+        $userLiveRoom = $this->lineBotDAO->findRoomUserIsLive($userId);
+        if(empty($userLiveRoom)){
+            $message['text'] = $this->MESSAGES['DELETE_NOT_EXISTS'];
+            $response['messages'][] = $message;
+        
+        }else if($roomInfo['status'] != $this->ROOM_STATUS['START']){
+            $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
+            foreach ($list as $row){
+                // set leave for room
+                $this->lineBotDAO->deleteRoomList($userLiveRoom['roomId'], $row['userId']);
+            }
+                $this->lineBotDAO->deleteRoom($userLiveRoom['roomId']);
+            // Push message for room
+            $message['text'] = $this->MESSAGES['DELETE_SUCCESS'];
+            $response['messages'][] = $message;
+        }else if($roomInfo['status'] == $this->ROOM_STATUS['START']){
+            $message['text'] = $this->MESSAGES['DELETE_FAILED'];
+            $response['messages'][] = $message;
         }
     }
 
