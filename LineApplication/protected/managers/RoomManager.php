@@ -451,12 +451,12 @@ class RoomManager{
                                 $killMessage[] = sprintf($this->MESSAGES['KILL_AGAIN_SUCCESS'], $setList[$row['toUserId']]['displayName']);
                             }
                             $setList[$row['toUserId']]['killCount']++;
-                        }else if($row['role'] == $this->ROLES['HELPER'] && $row['toUserId'] !=''){
+                        }else if($row['role'] == $this->ROLES['HELPER'] && $row['toUserId'] !='' && count($setList) > 2){
                             $setList[$row['toUserId']]['power'] = $this->ROLES['HELPER'];
                             $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['NORMAL'];
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['NORMAL']);
                             $helpMessage[] = sprintf($this->MESSAGES['HELP_SUCCESS'], $setList[$row['toUserId']]['displayName']);
-                        }else if($row['role'] == $this->ROLES['PEEPER'] && count($setList) > 2){
+                        }else if($row['role'] == $this->ROLES['PEEPER'] ){
                             $peepMessage[$row['userId']] = sprintf($this->MESSAGES['PEEP_SUCCESS'], $setList[$row['toUserId']]['displayName'], $this->roleName[$setList[$row['toUserId']]['role']]);
                         }
                     }
