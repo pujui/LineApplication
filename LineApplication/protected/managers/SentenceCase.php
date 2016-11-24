@@ -31,8 +31,8 @@ class SentenceCase{
         return $message;
     }
 
-    private function _main($patterns, $message){
-        foreach ($patterns as $command=>$patterns){
+    private function _main($list, $message){
+        foreach ($list as $command=>$patterns){
             $status = true;
             foreach ($patterns as $pattern){
                 if(!preg_match($pattern, $message)){
