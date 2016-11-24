@@ -2,8 +2,8 @@
 class SentenceCase{
     
     private $patterns = [
-        '/open'     => ['/房/i',],
-        '/start'    => ['/遊戲/i',],
+        '/open'     => ['/開/i', '/房/i',],
+        '/start'    => ['/開始/i', '/遊戲/i',],
         '/status'   => ['/狀|情/i',],
         '/kill'     => ['/殺/i',],
         '/peep'     => ['/看/i',],
@@ -17,7 +17,7 @@ class SentenceCase{
             'OK' => ['/我/i']
         ];
         $subMainPatterns = [
-            'OK' => ['/要|開|查|能/i']
+            'OK' => ['/要|查|能/i']
         ];
         $r = $this->_main($mainPatterns, $message);
         if($r !== FALSE){
