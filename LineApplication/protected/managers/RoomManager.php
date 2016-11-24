@@ -456,7 +456,7 @@ class RoomManager{
                             $setList[$row['toUserId']]['status'] = $this->ROLE_STATUS['NORMAL'];
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['toUserId'], '', $this->ROLE_STATUS['NORMAL']);
                             $helpMessage[] = sprintf($this->MESSAGES['HELP_SUCCESS'], $setList[$row['toUserId']]['displayName']);
-                        }else if($row['role'] == $this->ROLES['PEEPER'] ){
+                        }else if($row['role'] == $this->ROLES['PEEPER'] && count($setList) > 2){
                             $peepMessage[$row['userId']] = sprintf($this->MESSAGES['PEEP_SUCCESS'], $setList[$row['toUserId']]['displayName'], $this->roleName[$setList[$row['toUserId']]['role']]);
                         }
                     }
