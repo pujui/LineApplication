@@ -325,7 +325,7 @@ class RoomManager{
             $message['text'] = $this->MESSAGES['DELETE_NOT_EXISTS'];
             $response['messages'][] = $message;
         
-        }else if($roomInfo['status'] != $this->ROOM_STATUS['START']){
+        }else if($userLiveRoom['status'] != $this->ROOM_STATUS['START']){
             $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
             foreach ($list as $row){
                 // set leave for room
@@ -335,7 +335,7 @@ class RoomManager{
             // Push message for room
             $message['text'] = $this->MESSAGES['DELETE_SUCCESS'];
             $response['messages'][] = $message;
-        }else if($roomInfo['status'] == $this->ROOM_STATUS['START']){
+        }else if($userLiveRoom['status'] == $this->ROOM_STATUS['START']){
             $message['text'] = $this->MESSAGES['DELETE_FAILED'];
             $response['messages'][] = $message;
         }
