@@ -2,7 +2,7 @@
 class SentenceCase{
     
     private $patterns = [
-        '/open'     => ['/開/i', '/房/i',],
+        '/open'     => ['/房/i',],
         '/start'    => ['/開始/i', '/遊戲/i',],
         '/status'   => ['/狀|情/i',],
         '/kill'     => ['/殺/i',],
