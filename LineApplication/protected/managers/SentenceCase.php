@@ -9,8 +9,9 @@ class SentenceCase{
         '/peep'     => ['/看/i',],
         '/help'     => ['/救/i',],
         '/vote'     => ['/投票/i',],
-        '/close'     => ['/關閉|刪除/i',],
+        '/close'    => ['/關閉|刪除/i',],
         '/role'     => ['/腳色|角色|角色/i',],
+        '/reset'    => ['/重|新/i',],
     ];
 
     public function getResult($message){

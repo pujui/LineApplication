@@ -246,6 +246,7 @@ class RoomManager{
                 // Protect limit with role
                 $checkProtectedNumber = rand(2, 3);
                 $killerCount = floor(count($randomList)/8);
+                $helpCount = $peepCount = $killerCount;
                 foreach ($randomList as $key=>$user){
                     if($checkProtectedNumber > 0){
                         $setList[$user['id']]['role'] = $this->role[$key]['role'];
@@ -255,7 +256,11 @@ class RoomManager{
                         $r_k = (rand(0, 999)*$user['id'])%4;
                         if($killerCount>0 && $r_k==0){
                             $killerCount--;
-                        }else if($r_k==0){
+                        }else if($peepCount>0 && $r_k==1){
+                            $peepCount--;
+                        }else if($helpCount>0 && $r_k==2){
+                            $helpCount--;
+                        }else if($r_k<3){
                             $r_k = 4;
                         }
                         $setList[$user['id']]['role'] = $this->role[$r_k]['role'];
