@@ -412,7 +412,12 @@ class RoomManager{
                 }
                 $row['number'] = $key+1;
                 if($row['status'] == $this->ROLE_STATUS['NORMAL']){
-                    if($row['event'] == self::ROOM_EVENT_STOP){
+                    if(!preg_match('/bot-/i', $row['displayName'])){
+                        if($row['event'] != self::ROOM_EVENT_STOP){
+                            $actionCount++;
+                        }
+                        $row['event'] = self::ROOM_EVENT_STOP;
+                    }else if($row['event'] == self::ROOM_EVENT_STOP){
                         $actionCount++;
                     }
                     if($actionRoomStatus == self::ROOM_EVENT_VOTE){
@@ -442,8 +447,14 @@ class RoomManager{
                 }
                 if($mustActionCount <= $actionCount){
                     $mergeMessage = $killMessage = $helpMessage = $peepMessage = [];
+                    $randList = $setList;
+                    shuffle($randList);
                     $peopleNow = count($setList);
-                    foreach ($setList as $row){
+                    foreach ($setList as &$row){
+                        if(!preg_match('/bot-/i', $row['displayName'])){
+                            $row['toUserId'] = $randList[rand(0, count($randList))]['userId'];
+                            $this->lineBotDAO->updateRoomList($self['roomId'], $row['userId'], '', '', self::ROOM_EVENT_STOP, $row['toUserId']);
+                        }
                         if($actionRoomStatus == self::ROOM_EVENT_VOTE){
                             $setList[$row['toUserId']]['voteCount']++;
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', '', self::ROOM_EVENT_STOP);
@@ -470,6 +481,7 @@ class RoomManager{
                             $peepMessage[$row['userId']] = sprintf($this->MESSAGES['PEEP_SUCCESS'], $setList[$row['toUserId']]['displayName'], $this->roleName[$setList[$row['toUserId']]['role']]);
                         }
                     }
+                    unset($row);
                     if($actionRoomStatus == self::ROOM_EVENT_VOTE){
                         $maxUserId = $maxVote = 0;
                         $voteMessage[] = $this->MESSAGES['VOTE_MESSAGE'];
