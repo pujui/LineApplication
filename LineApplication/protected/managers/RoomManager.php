@@ -202,9 +202,9 @@ class RoomManager{
         if(empty($roomInfo)){
             $message['text'] = $this->MESSAGES['JOIN_ROOM_NOT_EXIST'];
             $response['messages'][] = $message;
-        }else if($roomInfo['status'] == $this->ROOM_STATUS['OPEN'] && $bot == 'bot'){
+        }else if($roomInfo['status'] == $this->ROOM_STATUS['OPEN'] && $bot != ''){
             $userId = sha1(date('YmdHis').':'.$roomId.rand(0, 9999));
-            $response['displayName'] = 'Bot'.date('His');
+            $response['displayName'] = $bot;
             $this->lineBotDAO->setRoomList($roomId, $userId, $response['displayName'], $this->ROLE_STATUS['NORMAL'], $this->ROLE_STATUS['JOIN']);
             // Set join message
             $message['text'] = $response['displayName'].$this->MESSAGES['JOIN_ROOM_SUCCESS'];
