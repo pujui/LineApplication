@@ -452,7 +452,8 @@ class RoomManager{
                     $peopleNow = count($setList);
                     foreach ($setList as $userId=>$row){
                         if(preg_match('/bot-/i', $row['displayName'])){
-                            $setList[$userId]['toUserId'] = $randList[rand(0, count($randList))]['userId'];
+                            $row['toUserId'] = $randList[rand(0, count($randList))]['userId'];
+                            $setList[$userId]['toUserId'] = $row['toUserId']
                             $this->lineBotDAO->updateRoomList($row['roomId'], $row['userId'], '', '', self::ROOM_EVENT_STOP);
                         }
                         if($actionRoomStatus == self::ROOM_EVENT_VOTE){
