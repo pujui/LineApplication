@@ -323,7 +323,7 @@ class RoomManager{
      * @param unknown $message
      * @param unknown $response
      */
-    public function close($roomId, $message, &$response){
+    public function close($roomId, $message, &$response, $option = ''){
         $message = [ 'type' => 'text', 'text' => '' ];
         $roomInfo = $this->lineBotDAO->findRoom($roomId);
         if(empty($roomInfo)){
@@ -342,6 +342,12 @@ class RoomManager{
         }else if($roomInfo['status'] == $this->ROOM_STATUS['START']){
             $message['text'] = $this->MESSAGES['DELETE_FAILED'];
             $response['messages'][] = $message;
+        }
+        if($option == 'anger'){
+            $message['type'] = 'sticker';
+            $message['packageId'] = '1';
+            $message['stickerId'] = '6';
+            $this->parent->actionPushMessages($roomId, [$message]);
         }
     }
 
