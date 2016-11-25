@@ -329,14 +329,13 @@ class RoomManager{
         if(empty($roomInfo)){
             $message['text'] = $this->MESSAGES['DELETE_NOT_EXISTS'];
             $response['messages'][] = $message;
-        
         }else if($roomInfo['status'] != $this->ROOM_STATUS['START']){
             $list = $this->lineBotDAO->findRoomList($roomInfo['roomId']);
             foreach ($list as $row){
                 // set leave for room
                 $this->lineBotDAO->deleteRoomList($roomInfo['roomId'], $row['userId']);
             }
-           $this->lineBotDAO->deleteRoom($roomInfo['roomId']);
+            $this->lineBotDAO->deleteRoom($roomInfo['roomId']);
             // Push message for room
             $message['text'] = $this->MESSAGES['DELETE_SUCCESS'];
             $response['messages'][] = $message;
