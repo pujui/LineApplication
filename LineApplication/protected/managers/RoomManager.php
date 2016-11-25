@@ -336,7 +336,7 @@ class RoomManager{
                 // set leave for room
                 $this->lineBotDAO->deleteRoomList($roomInfo['roomId'], $row['userId']);
             }
-                $this->lineBotDAO->deleteRoom($roomInfo['roomId']);
+           $this->lineBotDAO->deleteRoom($roomInfo['roomId']);
             // Push message for room
             $message['text'] = $this->MESSAGES['DELETE_SUCCESS'];
             $response['messages'][] = $message;

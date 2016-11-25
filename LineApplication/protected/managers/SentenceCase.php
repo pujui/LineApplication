@@ -12,14 +12,15 @@ class SentenceCase{
         '/close'    => ['/關閉|刪/i',],
         '/role'     => ['/腳色|角色|角色/i',],
         '/reset'    => ['/重|新/i',],
+        '/leave'    => ['/離|滾|走/i',],
     ];
 
     public function getResult($message){
         $mainPatterns = [
-            'OK' => ['/我|幫/i']
+            'OK' => ['/我|幫|能|你/i']
         ];
         $subMainPatterns = [
-            'OK' => ['/要|查|能|刪|關|我/i']
+            'OK' => ['/要|幫|查|能|刪|關|我/i']
         ];
         $r = $this->_main($mainPatterns, $message);
         if($r !== FALSE){

@@ -19,9 +19,6 @@ class LineBotController extends FrameController{
 
     const TOKEN = 'Authorization: Bearer +EcHH6lvAf/A5uW512v+RANnVU/+tRQaMJkS4KkxtuAnmUjtwz9aiIx2V/5rYeH3k7vjxh4t549kvUUvZfSQc1KVDobOM7izPQgzMWqym+7NXH9xvcym0DlriDnGWZQ5Fy5XFA1m/I1WajRZHx9xyQdB04t89/1O/w1cDnyilFU=';
 
-    protected $keyword = [
-    ];
-    
     public $templateMessageManager;
 
     public function actionTest($message = ''){
@@ -52,6 +49,22 @@ class LineBotController extends FrameController{
         $result = curl_exec($ch);
         curl_close($ch);
         //echo $result;
+    }
+    
+    public function actionLeave($id = '', $message = ''){
+        $header = [
+            'Content-Type: application/json',
+            self::TOKEN
+        ];
+        $postData = [];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://api.line.me/v2/bot/{$message}/{$id}/leave");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        $result = curl_exec($ch);
+        curl_close($ch);
     }
 
     public function actionProfile($userId = '', $r = ''){
@@ -129,6 +142,9 @@ class LineBotController extends FrameController{
                 $roomManager->next($userId, $command, $response);
             }else if($command[0] == '/close'){
                 $roomManager->close($userId, $command, $response);
+            }else if($command[0] == '/leave'){
+                $roomManager->close($userId, $command, $response);
+                $this->actionLeave($userId, $type);
             }
         }else if($command[0] == '/join'){
             $roomManager->join($userId, $command, $response);
