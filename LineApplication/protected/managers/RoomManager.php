@@ -288,6 +288,10 @@ class RoomManager{
                     $message['text'] = sprintf($this->MESSAGES['ROLE_CHECKED'], $this->roleName[$user['role']]);
                     $this->parent->actionPushMessages($user['userId'], [$message]);
                 }
+                $message['type'] = 'sticker';
+                $message['packageId'] = '1';
+                $message['stickerId'] = '405';
+                $response['messages'][] = $message;
             }
         }else if($roomInfo['status'] == $this->ROOM_STATUS['START']){
             // Set status message on room
@@ -576,6 +580,10 @@ class RoomManager{
             $message['text'] = $this->MESSAGES['NIGHT_COMING'];
             $pushMessages['messages'] = [$message];
             $this->setRoomRoleStatus($userLiveRoom['roomId'], $pushMessages);
+            $message['type'] = 'sticker';
+            $message['packageId'] = '1';
+            $message['stickerId'] = '403';
+            $pushMessages['messages'][] = $message;
             $list = $this->lineBotDAO->findRoomList($userLiveRoom['roomId']);
             foreach ($list as $row){
                 $this->parent->actionPushMessages($row['userId'], $pushMessages['messages']);
@@ -655,6 +663,10 @@ class RoomManager{
             $message['text'] = $this->MESSAGES['JOIN_START'];
             $response['messages'][] = $message;
             $message['text'] = sprintf($this->MESSAGES['JOIN_COMMAND'], $roomId);
+            $response['messages'][] = $message;
+            $message['type'] = 'sticker';
+            $message['packageId'] = '1';
+            $message['stickerId'] = '109';
             $response['messages'][] = $message;
         }else if($status == $this->ROOM_STATUS['OPEN']){
             $message['text'] = sprintf($this->MESSAGES['WAITE_STATUS_OPEN'], count($list))
