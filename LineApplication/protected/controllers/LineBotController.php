@@ -144,7 +144,7 @@ class LineBotController extends FrameController{
                 $roomManager->close($userId, $command, $response);
             }else if($command[0] == '/leave'){
                 $roomManager->close($userId, $command, $response, 'anger');
-                $this->actionLeave($userId, $type);
+                //$this->actionLeave($userId, $type);
             }
         }else if($command[0] == '/join'){
             $roomManager->join($userId, $command, $response);
