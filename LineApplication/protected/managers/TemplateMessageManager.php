@@ -9,7 +9,7 @@ class TemplateMessageManager{
         foreach ($list as $number=>$row){
             if($row['status'] == 'NORMAL'){
                 $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
-                $action['text'] = sprintf('/kill %d', $number+1, $row['displayName']);
+                $action['text'] = sprintf('/kill %d %s', $number+1, $row['displayName']);
                 $messages[] = $action;
             }
         }
@@ -22,7 +22,7 @@ class TemplateMessageManager{
         foreach ($list as $number=>$row){
             if($row['status'] == 'NORMAL'){
                 $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
-                $action['text'] = sprintf('/peep %d', $number+1, $row['displayName']);
+                $action['text'] = sprintf('/peep %d %s', $number+1, $row['displayName']);
                 $messages[] = $action;
             }
         }
@@ -35,7 +35,7 @@ class TemplateMessageManager{
         foreach ($list as $number=>$row){
             if($row['status'] == 'NORMAL'){
                 $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
-                $action['text'] = sprintf('/help %d', $number+1, $row['displayName']);
+                $action['text'] = sprintf('/help %d %s', $number+1, $row['displayName']);
                 $messages[] = $action;
             }
         }
@@ -48,7 +48,7 @@ class TemplateMessageManager{
         foreach ($list as $number=>$row){
             if($row['status'] == 'NORMAL'){
                 $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
-                $action['text'] = sprintf('/vote %d', $number+1, $row['displayName']);
+                $action['text'] = sprintf('/vote %d %s', $number+1, $row['displayName']);
                 $messages[] = $action;
             }
         }
