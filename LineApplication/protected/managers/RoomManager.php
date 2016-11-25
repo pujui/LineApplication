@@ -485,7 +485,7 @@ class RoomManager{
                     if($actionRoomStatus == self::ROOM_EVENT_VOTE){
                         $maxUserId = $maxVote = 0;
                         $voteMessage[] = $this->MESSAGES['VOTE_MESSAGE'];
-                        foreach ($setList as $row){
+                        foreach ($randList as $row){
                             if($row['status'] == $this->ROLE_STATUS['NORMAL']){
                                 $voteMessage[] = sprintf($this->MESSAGES['VOTE_TOTAL'], $row['displayName'], $row['voteCount']);
                                 if($row['voteCount'] >= $maxVote){
