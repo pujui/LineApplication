@@ -5,11 +5,11 @@ class TemplateMessageManager{
     
     public function KILLER($userId, $list){
         $messages = [];
-        $action = ['type' => 'message', 'label' => '', 'text' => '/kill %d'];
+        $action = ['type' => 'message', 'label' => '', 'text' => '/kill %d %s'];
         foreach ($list as $number=>$row){
             if($row['status'] == 'NORMAL'){
                 $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
-                $action['text'] = sprintf('/kill %d', $number+1);
+                $action['text'] = sprintf('/kill %d', $number+1, $row['displayName']);
                 $messages[] = $action;
             }
         }
@@ -18,11 +18,11 @@ class TemplateMessageManager{
 
     public function PEEPER($userId, $list){
         $messages = [];
-        $action = ['type' => 'message', 'label' => '', 'text' => '/peep %d'];
+        $action = ['type' => 'message', 'label' => '', 'text' => '/peep %d %s'];
         foreach ($list as $number=>$row){
             if($row['status'] == 'NORMAL'){
                 $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
-                $action['text'] = sprintf('/peep %d', $number+1);
+                $action['text'] = sprintf('/peep %d', $number+1, $row['displayName']);
                 $messages[] = $action;
             }
         }
@@ -31,11 +31,11 @@ class TemplateMessageManager{
 
     public function HELPER($userId, $list){
         $messages = [];
-        $action = ['type' => 'message', 'label' => '', 'text' => '/help %d'];
+        $action = ['type' => 'message', 'label' => '', 'text' => '/help %d %s'];
         foreach ($list as $number=>$row){
             if($row['status'] == 'NORMAL'){
                 $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
-                $action['text'] = sprintf('/help %d', $number+1);
+                $action['text'] = sprintf('/help %d', $number+1, $row['displayName']);
                 $messages[] = $action;
             }
         }
@@ -44,11 +44,11 @@ class TemplateMessageManager{
 
     public function VOTE($userId, $list){
         $messages = [];
-        $action = ['type' => 'message', 'label' => '', 'text' => '/vote %d'];
+        $action = ['type' => 'message', 'label' => '', 'text' => '/vote %d %s'];
         foreach ($list as $number=>$row){
             if($row['status'] == 'NORMAL'){
                 $action['label'] = sprintf('Player %d. %s', $number+1, $row['displayName']);
-                $action['text'] = sprintf('/vote %d', $number+1);
+                $action['text'] = sprintf('/vote %d', $number+1, $row['displayName']);
                 $messages[] = $action;
             }
         }
