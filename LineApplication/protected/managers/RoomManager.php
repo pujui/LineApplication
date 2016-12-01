@@ -20,7 +20,7 @@ class RoomManager{
         'START_NOT_EXIST'       => "不好意思啦~還未開起遊戲!想開啟遊戲請大聲跟我說喔~",
         'START_LIMIT'           => "加入由遊戲人數最少要四人不然遊戲會很無聊滴",
         'START'                 => "遊戲準備開始囉~",
-        'START_TIME'            => "遊戲%d後開始",
+        'START_TIME'            => "遊戲%d秒後開始",
         'START_ARLEADY'         => "各位羔羊們準備受死吧~~哇哈哈哈",
         'NIGHT_COMING'          => "夜晚來臨了...村莊內的人都睡了除了某些怪咖...",
         'LEAVE_NOT_EXIST'       => "您目前無在任何遊戲內",
