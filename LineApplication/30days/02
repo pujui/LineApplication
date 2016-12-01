@@ -1,0 +1,32 @@
+
+Day 2 - [LineBot 遊戲機器人]基本認識-2
+
+在開始之前先建立一個Git Repository
+
+而筆者我會用github(https://github.com)當作Git Server
+
+先在上面建一個空的Repository, 當然如果你有自己的地方的話當然也是可以,
+
+當30天完成後我會Git位置給釋出, 目前就先保密囉!
+
+*如果你沒使用過git, 那你也可以忽略上面這段話囉
+
+在建立好Git後, 我們先去Line申請一個Messaging API(https://business.line.me/zh-hant/)帳號,
+
+前提你要先有Line主帳號, 從Line主帳號去申請Messaging API的帳號。
+
+帳號有兩種
+
+*第一種是單純使用Messaging API
+*第二種是Messaging API Developer Trial
+
+這邊我們註冊為第二種, 至於有什麼差別呢
+
+申請完成後, 你會在你帳號清單看到該帳號, 點進去該帳號的Line Manager->settings->Bot settings 確認開通API
+
+上面完成後你應該會看到
+Usable APIs
+    REPLY_MESSAGE
+    PUSH_MESSAGE
+都是打勾狀態, 如果你帳號申請第一種的話只會有REPLY_MESSAGE的權限
+
