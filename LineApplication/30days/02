@@ -1,32 +1,57 @@
 
-Day 2 - [LineBot 遊戲機器人]基本認識-2
+Day 2 - [LineBot 遊戲機器人] 環境的建立
 
-在開始之前先建立一個Git Repository
+今日的主題會是帳號建立後與環境的測試, 主題如下：
 
-而筆者我會用github(https://github.com)當作Git Server
+1.Git Repository的建立(https://git-scm.com/、https://github.com/)
+
+2.Line API帳號的建立(https://business.line.me/zh-hant/)
+
+3.Google CE帳號的建立(https://console.developers.google.com)
+
+4.webscript帳號的建立(https://www.webscript.io)
+
+
+Git Repository的建立：
+
+在任何動作開始之前先建立一個Git Repository，而筆者我會用github(https://github.com)當作Git Server
 
 先在上面建一個空的Repository, 當然如果你有自己的地方的話當然也是可以,
 
 當30天完成後我會Git位置給釋出, 目前就先保密囉!
 
-*如果你沒使用過git, 那你也可以忽略上面這段話囉
+*如果你沒使用過Git也沒關係你可以直接忽略或者去學習一下後再回來, 因本次主要重點是要做LineBot所以內容上有些基礎內容並不會特別標示出來。
+
+Line API帳號的建立：
 
 在建立好Git後, 我們先去Line申請一個Messaging API(https://business.line.me/zh-hant/)帳號,
 
 前提你要先有Line主帳號, 從Line主帳號去申請Messaging API的帳號。
+圖1:
+*******
+*******
+*******
 
 帳號有兩種
-
 *第一種是單純使用Messaging API
 *第二種是Messaging API Developer Trial
+圖2:
+*******
+*******
+*******
 
 這邊我們註冊為第二種, 至於有什麼差別呢
-
 申請完成後, 你會在你帳號清單看到該帳號, 點進去該帳號的Line Manager->settings->Bot settings 確認開通API
+圖3:
+*******
+*******
+*******
 
-上面完成後你應該會看到
-Usable APIs
-    REPLY_MESSAGE
-    PUSH_MESSAGE
+上面完成後你應該會看到 Usable APIs:REPLY_MESSAGE、PUSH_MESSAGE
 都是打勾狀態, 如果你帳號申請第一種的話只會有REPLY_MESSAGE的權限
+圖4:
+*******
+*******
+*******
+
 
