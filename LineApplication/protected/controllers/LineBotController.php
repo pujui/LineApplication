@@ -46,6 +46,7 @@ class LineBotController extends FrameController{
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         curl_close($ch);
         //echo $result;
@@ -63,7 +64,9 @@ class LineBotController extends FrameController{
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
+        $this->wlog($result.'|'. $id .'|'. $message. '|' . curl_error($ch));
         curl_close($ch);
     }
 
@@ -77,6 +80,7 @@ class LineBotController extends FrameController{
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_POST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         curl_close($ch);
         if($r === '1') return json_decode($result, true);
@@ -188,6 +192,7 @@ class LineBotController extends FrameController{
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postMessages));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         curl_close($ch);
     }
@@ -223,11 +228,19 @@ class LineBotController extends FrameController{
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postMessages));
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $result = curl_exec($ch);
             curl_close($ch);
         }
     }
 
+    private function wlog($string)
+    {
+        $file = fopen(date('YmdH')."log","a+");
+        fwrite($file, date('Y-m-d H:i:s').PHP_EOL.$string.PHP_EOL);
+        fclose($file);
+    }
+    
     private function exitHook($response){
         echo json_encode($response);
         exit;

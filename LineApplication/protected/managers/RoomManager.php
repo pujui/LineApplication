@@ -331,9 +331,16 @@ class RoomManager{
         $message = [ 'type' => 'text', 'text' => '' ];
         $roomInfo = $this->lineBotDAO->findRoom($roomId);
         if(empty($roomInfo)){
+            if($option == 'anger'){
+                $message['type'] = 'sticker';
+                $message['packageId'] = '1';
+                $message['stickerId'] = '6';
+                $this->parent->actionPushMessages($roomId, [$message]);
+                return ;
+            }
             $message['text'] = $this->MESSAGES['DELETE_NOT_EXISTS'];
             $response['messages'][] = $message;
-        }else if($roomInfo['status'] != $this->ROOM_STATUS['START']){
+        }else if($roomInfo['status'] != $this->ROOM_STATUS['START'] ){
             $list = $this->lineBotDAO->findRoomList($roomInfo['roomId']);
             foreach ($list as $row){
                 // set leave for room
